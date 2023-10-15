@@ -14,7 +14,7 @@ android {
         if (buildAsApplication) {
             applicationId "com.dishii.soh"
         }
-        minSdkVersion 30
+        minSdkVersion 18
         targetSdkVersion 31
         versionCode 1
         versionName "1.0.0"
