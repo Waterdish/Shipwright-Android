@@ -25,6 +25,6 @@ Q: Why does it say no assets/extractor folder exists?<br>
 Q: Why are these changes not in the main Shipwright repository?<br>
   A: This started as just an experiment that ended up working. This code is not in a state to be merged with the main repository, but I welcome anybody to take code from this repo to help add the port to the main repository. The main changes made were pointing the app to search in the ExternalDataDir and editing the libultraship opengles backend to support opengl es 3.<br> <br>
 
-<h3>Build Instructions:</h3><br>
+<h3>Build Instructions:</h3>
 1.Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
 2.Open the project in android studio and build.<br>
