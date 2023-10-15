@@ -1,0 +1,875 @@
+
+# Build rules for objects
+-include $(OBJECTS:.lo=.d)
+
+# Special dependency for SDL.c, since it depends on SDL_revision.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL.c: update-revision
+
+$(objects)/SDL.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_assert.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_assert.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dataqueue.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_dataqueue.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_error.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_error.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_guid.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_guid.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hints.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_hints.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_list.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_list.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_log.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_log.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_utils.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/SDL_utils.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_atomic.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/atomic/SDL_atomic.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_spinlock.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/atomic/SDL_spinlock.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_audio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/SDL_audio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_audiocvt.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/SDL_audiocvt.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_audiodev.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/SDL_audiodev.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_audiotypecvt.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/SDL_audiotypecvt.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_mixer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/SDL_mixer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_wave.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/SDL_wave.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_cpuinfo.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/cpuinfo/SDL_cpuinfo.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dynapi.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/dynapi/SDL_dynapi.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_clipboardevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_clipboardevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_displayevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_displayevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dropevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_dropevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_events.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_events.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_gesture.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_gesture.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_keyboard.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_keyboard.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_keysym_to_scancode.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_keysym_to_scancode.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_mouse.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_mouse.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_quit.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_quit.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_scancode_tables.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_scancode_tables.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_touch.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_touch.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_windowevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/SDL_windowevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/imKStoUCS.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/events/imKStoUCS.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_rwops.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/file/SDL_rwops.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_haptic.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/haptic/SDL_haptic.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/hidapi/SDL_hidapi.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_gamecontroller.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/SDL_gamecontroller.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_joystick.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/SDL_joystick.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/controller_type.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/controller_type.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_atan2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_atan2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_exp.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_exp.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_fmod.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_fmod.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_log.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_log.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_log10.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_log10.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_pow.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_pow.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_rem_pio2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_rem_pio2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/e_sqrt.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/e_sqrt.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/k_cos.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/k_cos.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/k_rem_pio2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/k_rem_pio2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/k_sin.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/k_sin.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/k_tan.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/k_tan.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_atan.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_atan.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_copysign.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_copysign.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_cos.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_cos.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_fabs.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_fabs.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_floor.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_floor.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_scalbn.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_scalbn.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_sin.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_sin.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/s_tan.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/libm/s_tan.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_url.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/misc/SDL_url.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_power.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/power/SDL_power.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_d3dmath.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/SDL_d3dmath.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/SDL_render.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_yuv_sw.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/SDL_yuv_sw.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_d3d.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/direct3d/SDL_render_d3d.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_shaders_d3d.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/direct3d/SDL_shaders_d3d.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_d3d11.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/direct3d11/SDL_render_d3d11.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_shaders_d3d11.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/direct3d11/SDL_shaders_d3d11.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_d3d12.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/direct3d12/SDL_render_d3d12.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_shaders_d3d12.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/direct3d12/SDL_shaders_d3d12.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_gl.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/opengl/SDL_render_gl.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_shaders_gl.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/opengl/SDL_shaders_gl.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_gles.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/opengles/SDL_render_gles.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_gles2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/opengles2/SDL_render_gles2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_shaders_gles2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/opengles2/SDL_shaders_gles2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_ps2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/ps2/SDL_render_ps2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_psp.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/psp/SDL_render_psp.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blendfillrect.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_blendfillrect.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blendline.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_blendline.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blendpoint.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_blendpoint.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_drawline.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_drawline.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_drawpoint.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_drawpoint.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_sw.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_render_sw.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_rotate.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_rotate.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_triangle.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/software/SDL_triangle.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_vita_gxm.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/vitagxm/SDL_render_vita_gxm.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_vita_gxm_memory.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/vitagxm/SDL_render_vita_gxm_memory.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_render_vita_gxm_tools.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/render/vitagxm/SDL_render_vita_gxm_tools.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sensor.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/sensor/SDL_sensor.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_crc16.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_crc16.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_crc32.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_crc32.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_getenv.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_getenv.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_iconv.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_iconv.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_malloc.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_malloc.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_mslibc.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_mslibc.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_qsort.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_qsort.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_stdlib.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_stdlib.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_string.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_string.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_strtokr.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/stdlib/SDL_strtokr.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_thread.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/thread/SDL_thread.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_timer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/timer/SDL_timer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_RLEaccel.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_RLEaccel.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_0.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_0.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_1.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_1.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_A.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_A.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_N.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_N.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_auto.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_auto.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_copy.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_copy.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_blit_slow.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_blit_slow.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_bmp.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_bmp.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_clipboard.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_clipboard.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_egl.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_egl.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_fillrect.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_fillrect.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_pixels.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_pixels.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_rect.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_rect.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_shape.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_shape.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_stretch.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_stretch.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_surface.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_surface.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_video.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_video.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_vulkan_utils.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_vulkan_utils.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_yuv.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/SDL_yuv.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/yuv_rgb.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/yuv2rgb/yuv_rgb.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_locale.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/locale/SDL_locale.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_nullevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/dummy/SDL_nullevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_nullframebuffer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/dummy/SDL_nullframebuffer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_nullvideo.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/dummy/SDL_nullvideo.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_offscreenevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/offscreen/SDL_offscreenevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_offscreenframebuffer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/offscreen/SDL_offscreenframebuffer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_offscreenopengles.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/offscreen/SDL_offscreenopengles.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_offscreenvideo.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/offscreen/SDL_offscreenvideo.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_offscreenwindow.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/offscreen/SDL_offscreenwindow.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_diskaudio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/disk/SDL_diskaudio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dummyaudio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/dummy/SDL_dummyaudio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sysloadso.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/loadso/dlopen/SDL_sysloadso.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dspaudio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/dsp/SDL_dspaudio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_alsa_audio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/alsa/SDL_alsa_audio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_pulseaudio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/pulseaudio/SDL_pulseaudio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sndioaudio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/audio/sndio/SDL_sndioaudio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11clipboard.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11clipboard.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11dyn.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11dyn.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11events.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11events.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11framebuffer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11framebuffer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11keyboard.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11keyboard.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11messagebox.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11messagebox.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11modes.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11modes.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11mouse.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11mouse.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11opengl.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11opengl.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11opengles.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11opengles.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11shape.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11shape.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11touch.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11touch.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11video.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11video.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11vulkan.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11vulkan.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11window.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11window.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11xfixes.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11xfixes.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_x11xinput2.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/SDL_x11xinput2.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/edid-parse.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/x11/edid-parse.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_kmsdrmdyn.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/kmsdrm/SDL_kmsdrmdyn.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_kmsdrmevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/kmsdrm/SDL_kmsdrmevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_kmsdrmmouse.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/kmsdrm/SDL_kmsdrmmouse.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_kmsdrmopengles.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/kmsdrm/SDL_kmsdrmopengles.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_kmsdrmvideo.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/kmsdrm/SDL_kmsdrmvideo.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_kmsdrmvulkan.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/kmsdrm/SDL_kmsdrmvulkan.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandclipboard.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandclipboard.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylanddatamanager.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylanddatamanager.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylanddyn.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylanddyn.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandevents.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandevents.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandkeyboard.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandkeyboard.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandmessagebox.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandmessagebox.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandmouse.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandmouse.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandopengles.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandopengles.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandtouch.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandtouch.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandvideo.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandvideo.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandvulkan.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandvulkan.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_waylandwindow.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandwindow.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dbus.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_dbus.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_ime.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_ime.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_ibus.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_ibus.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_fcitx.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_fcitx.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_combined.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_combined.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_gamecube.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_gamecube.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_luna.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_luna.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_ps3.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_ps3.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_ps4.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_ps4.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_ps5.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_ps5.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_rumble.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_rumble.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_shield.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_shield.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_stadia.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_stadia.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_steam.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_steam.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_switch.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_switch.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_wii.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_wii.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_xbox360.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_xbox360.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_xbox360w.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_xbox360w.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapi_xboxone.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapi_xboxone.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_hidapijoystick.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/hidapi/SDL_hidapijoystick.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_systhread.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/thread/pthread/SDL_systhread.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_syssem.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/thread/pthread/SDL_syssem.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sysmutex.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/thread/pthread/SDL_sysmutex.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_syscond.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/thread/pthread/SDL_syscond.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_systls.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/thread/pthread/SDL_systls.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sysurl.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/misc/unix/SDL_sysurl.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_syslocale.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/locale/unix/SDL_syslocale.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sysjoystick.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/linux/SDL_sysjoystick.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_steamcontroller.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/steam/SDL_steamcontroller.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_syshaptic.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/haptic/linux/SDL_syshaptic.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_syspower.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/power/linux/SDL_syspower.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sysfilesystem.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/filesystem/unix/SDL_sysfilesystem.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_systimer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/timer/unix/SDL_systimer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_udev.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_udev.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_evdev.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_evdev.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_evdev_kbd.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_evdev_kbd.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_evdev_kbd_freebsd.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/freebsd/SDL_evdev_kbd_freebsd.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_evdev_capabilities.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_evdev_capabilities.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_threadprio.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_threadprio.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_sandbox.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/linux/SDL_sandbox.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_poll.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/core/unix/SDL_poll.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_virtualjoystick.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/joystick/virtual/SDL_virtualjoystick.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_dummysensor.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/sensor/dummy/SDL_dummysensor.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+
+$(objects)/SDL_dummy_main.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/main/dummy/SDL_dummy_main.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(objects)/SDL_test_assert.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_assert.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_common.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_common.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_compare.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_compare.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_crc32.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_crc32.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_font.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_font.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_fuzzer.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_fuzzer.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_harness.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_harness.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_imageBlit.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_imageBlit.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_imageBlitBlend.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_imageBlitBlend.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_imageFace.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_imageFace.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_imagePrimitives.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_imagePrimitives.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_imagePrimitivesBlend.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_imagePrimitivesBlend.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_log.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_log.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_md5.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_md5.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_memory.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_memory.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@ 
+$(objects)/SDL_test_random.lo: /home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/test/SDL_test_random.c $(objects)/.created
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/fractional-scale-v1-client-protocol.h: $(srcdir)/wayland-protocols/fractional-scale-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/fractional-scale-v1-protocol.c: $(srcdir)/wayland-protocols/fractional-scale-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/fractional-scale-v1-protocol.lo: $(gen)/fractional-scale-v1-protocol.c $(gen)/fractional-scale-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/idle-inhibit-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/idle-inhibit-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/idle-inhibit-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/idle-inhibit-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/idle-inhibit-unstable-v1-protocol.lo: $(gen)/idle-inhibit-unstable-v1-protocol.c $(gen)/idle-inhibit-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/keyboard-shortcuts-inhibit-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/keyboard-shortcuts-inhibit-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/keyboard-shortcuts-inhibit-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/keyboard-shortcuts-inhibit-unstable-v1-protocol.lo: $(gen)/keyboard-shortcuts-inhibit-unstable-v1-protocol.c $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/pointer-constraints-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/pointer-constraints-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/pointer-constraints-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/pointer-constraints-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/pointer-constraints-unstable-v1-protocol.lo: $(gen)/pointer-constraints-unstable-v1-protocol.c $(gen)/pointer-constraints-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/primary-selection-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/primary-selection-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/primary-selection-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/primary-selection-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/primary-selection-unstable-v1-protocol.lo: $(gen)/primary-selection-unstable-v1-protocol.c $(gen)/primary-selection-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/relative-pointer-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/relative-pointer-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/relative-pointer-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/relative-pointer-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/relative-pointer-unstable-v1-protocol.lo: $(gen)/relative-pointer-unstable-v1-protocol.c $(gen)/relative-pointer-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/tablet-unstable-v2-client-protocol.h: $(srcdir)/wayland-protocols/tablet-unstable-v2.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/tablet-unstable-v2-protocol.c: $(srcdir)/wayland-protocols/tablet-unstable-v2.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/tablet-unstable-v2-protocol.lo: $(gen)/tablet-unstable-v2-protocol.c $(gen)/tablet-unstable-v2-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/text-input-unstable-v3-client-protocol.h: $(srcdir)/wayland-protocols/text-input-unstable-v3.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/text-input-unstable-v3-protocol.c: $(srcdir)/wayland-protocols/text-input-unstable-v3.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/text-input-unstable-v3-protocol.lo: $(gen)/text-input-unstable-v3-protocol.c $(gen)/text-input-unstable-v3-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/viewporter-client-protocol.h: $(srcdir)/wayland-protocols/viewporter.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/viewporter-protocol.c: $(srcdir)/wayland-protocols/viewporter.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/viewporter-protocol.lo: $(gen)/viewporter-protocol.c $(gen)/viewporter-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/wayland-client-protocol.h: $(srcdir)/wayland-protocols/wayland.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/wayland-protocol.c: $(srcdir)/wayland-protocols/wayland.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/wayland-protocol.lo: $(gen)/wayland-protocol.c $(gen)/wayland-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/xdg-activation-v1-client-protocol.h: $(srcdir)/wayland-protocols/xdg-activation-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/xdg-activation-v1-protocol.c: $(srcdir)/wayland-protocols/xdg-activation-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/xdg-activation-v1-protocol.lo: $(gen)/xdg-activation-v1-protocol.c $(gen)/xdg-activation-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/xdg-decoration-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/xdg-decoration-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/xdg-decoration-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/xdg-decoration-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/xdg-decoration-unstable-v1-protocol.lo: $(gen)/xdg-decoration-unstable-v1-protocol.c $(gen)/xdg-decoration-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/xdg-output-unstable-v1-client-protocol.h: $(srcdir)/wayland-protocols/xdg-output-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/xdg-output-unstable-v1-protocol.c: $(srcdir)/wayland-protocols/xdg-output-unstable-v1.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/xdg-output-unstable-v1-protocol.lo: $(gen)/xdg-output-unstable-v1-protocol.c $(gen)/xdg-output-unstable-v1-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+$(gen)/xdg-shell-client-protocol.h: $(srcdir)/wayland-protocols/xdg-shell.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) client-header $< $@
+
+$(gen)/xdg-shell-protocol.c: $(srcdir)/wayland-protocols/xdg-shell.xml
+	@$(SHELL) $(auxdir)/mkinstalldirs $(gen)
+	$(RUN_CMD_GEN)$(WAYLAND_SCANNER) $(WAYLAND_SCANNER_CODE_MODE) $< $@
+
+$(objects)/xdg-shell-protocol.lo: $(gen)/xdg-shell-protocol.c $(gen)/xdg-shell-client-protocol.h
+	@$(SHELL) $(auxdir)/mkinstalldirs $(objects)
+	$(RUN_CMD_CC)$(LIBTOOL) --tag=CC --mode=compile $(CC) $(CFLAGS) $(EXTRA_CFLAGS) -MMD -MT $@ -c $< -o $@
+
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandclipboard.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylanddatamanager.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylanddyn.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandevents.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandkeyboard.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandmessagebox.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandmouse.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandopengles.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandtouch.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandvideo.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandvulkan.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h
+/home/waterdish/Android/projects/Soh-2/app/jni/SDL2/src/video/wayland/SDL_waylandwindow.c: $(gen)/fractional-scale-v1-client-protocol.h $(gen)/idle-inhibit-unstable-v1-client-protocol.h $(gen)/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h $(gen)/pointer-constraints-unstable-v1-client-protocol.h $(gen)/primary-selection-unstable-v1-client-protocol.h $(gen)/relative-pointer-unstable-v1-client-protocol.h $(gen)/tablet-unstable-v2-client-protocol.h $(gen)/text-input-unstable-v3-client-protocol.h $(gen)/viewporter-client-protocol.h $(gen)/wayland-client-protocol.h $(gen)/xdg-activation-v1-client-protocol.h $(gen)/xdg-decoration-unstable-v1-client-protocol.h $(gen)/xdg-output-unstable-v1-client-protocol.h $(gen)/xdg-shell-client-protocol.h

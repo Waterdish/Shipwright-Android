@@ -1,0 +1,51 @@
+name: tidy-format-validation
+on: [pull_request]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  tidy-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsdl2-dev libpng-dev libglew-dev ninja-build clang-tidy clang-format-12
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ runner.os }}-ccache
+      - name: Run clang-format
+        run: |
+          find src include -name "*.cpp" -o -name "*.h" | sed 's| |\\ |g' | xargs clang-format-12 -i
+          git diff --exit-code
+      - name: Install latest SDL
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          wget https://www.libsdl.org/release/SDL2-2.24.1.tar.gz
+          tar -xzf SDL2-2.24.1.tar.gz
+          cd SDL2-2.24.1
+          ./configure
+          make -j 10
+          sudo make install
+      - name: Prepare compile_commands.json
+        run: |
+          cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: Create results directory
+        run: |
+          mkdir clang-tidy-result
+      - name: Analyze
+        run: |
+          git diff -U0 HEAD^ -- 'src' 'include' ':!include/color.h' ':!include/libultra/*' ':!src/public/libultra/*' ':!src/graphic/Fast3D/*' ':!src/log/spd' | clang-tidy-diff -p1 -path build -export-fixes clang-tidy-result/fixes.yml
+      - name: Save PR metadata
+        run: |
+          echo ${{ github.event.number }} > clang-tidy-result/pr-id.txt
+          echo ${{ github.event.pull_request.head.repo.full_name }} > clang-tidy-result/pr-head-repo.txt
+          echo ${{ github.event.pull_request.head.ref }} > clang-tidy-result/pr-head-ref.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: clang-tidy-result
+          path: clang-tidy-result/

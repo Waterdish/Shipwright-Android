@@ -1,0 +1,86 @@
+def buildAsLibrary = project.hasProperty('BUILD_AS_LIBRARY');
+def buildAsApplication = !buildAsLibrary
+if (buildAsApplication) {
+    apply plugin: 'com.android.application'
+}
+else {
+    apply plugin: 'com.android.library'
+}
+
+android {
+    ndkPath "/home/waterdish/Android/Sdk/ndk/26.0.10792818"  // Point to your own NDK
+    compileSdkVersion 31
+    defaultConfig {
+        if (buildAsApplication) {
+            applicationId "com.dishii.soh"
+        }
+        minSdkVersion 30
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0.0"
+        externalNativeBuild {
+            //ndkBuild {
+            //    arguments "APP_PLATFORM=android-23"
+            //    abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            //}
+            cmake {
+                 arguments "-DANDROID_APP_PLATFORM=android-23", "-DANDROID_STL=c++_static"
+                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+                 //abiFilters 'arm64-v8a'
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    applicationVariants.all { variant ->
+        tasks["merge${variant.name.capitalize()}Assets"]
+            .dependsOn("externalNativeBuild${variant.name.capitalize()}")
+    }
+    if (!project.hasProperty('EXCLUDE_NATIVE_LIBS')) {
+        sourceSets.main {
+            jniLibs.srcDir 'libs'
+        }
+        externalNativeBuild {
+            //ndkBuild {
+            //    path 'jni/Android.mk'
+            //}
+            cmake {
+                 path 'jni/CMakeLists.txt'
+                 version "3.25.1"
+            }
+        }
+       
+    }
+    lintOptions {
+        abortOnError false
+    }
+    
+    if (buildAsLibrary) {
+        libraryVariants.all { variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith(".aar")) {
+                    def fileName = "org.libsdl.app.aar";
+                    output.outputFile = new File(outputFile.parent, fileName);
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.core:core:1.7.0' // Use the latest version
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '7.3'
+}
+
+task prepareKotlinBuildScriptModel {
+}

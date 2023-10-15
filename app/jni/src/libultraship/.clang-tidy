@@ -1,0 +1,30 @@
+Checks: '-*,readability-braces-around-statements,readability-inconsistent-declaration-parameter-name,readability-identifier-naming'
+WarningsAsErrors: ''
+HeaderFilterRegex: '(src|include)\/.*\.h$'
+FormatStyle: 'file'
+CheckOptions:
+  - { key: readability-identifier-naming.NamespaceCase,       	value: CamelCase  }
+  - { key: readability-identifier-naming.ClassCase,           	value: CamelCase  }
+  - { key: readability-identifier-naming.PrivateMemberPrefix, 	value: m          }
+  - { key: readability-identifier-naming.ProtectedMemberPrefix, value: m          }
+  - { key: readability-identifier-naming.PrivateMemberCase, 	value: CamelCase  }
+  - { key: readability-identifier-naming.ProtectedMemberCase,  	value: CamelCase  }
+  - { key: readability-identifier-naming.PublicMemberCase,  	value: CamelCase  }
+  - { key: readability-identifier-naming.MemberCase,			value: CamelCase  }
+  - { key: readability-identifier-naming.StructCase,          	value: CamelCase  }
+  #- { key: readability-identifier-naming.EnumCase,          	value: CamelCase  }
+  #- { key: readability-identifier-naming.EnumConstantCase,     value: UPPER_CASE }
+  - { key: readability-identifier-naming.VariableCase,        	value: CamelCase  }
+  - { key: readability-identifier-naming.StaticVariableCase,  	value: CamelCase  }
+  - { key: readability-identifier-naming.StaticVariablePrefix,  value: s          }
+  - { key: readability-identifier-naming.GlobalConstantCase,  	value: CamelCase  }
+  - { key: readability-identifier-naming.GlobalConstantPrefix,  value: g          }
+  - { key: readability-identifier-naming.MethodCase,        	value: CamelCase  }
+  - { key: readability-identifier-naming.FunctionCase,        	value: CamelCase  }
+  - { key: readability-identifier-naming.VariableCase,        	value: camelBack  }
+  - { key: readability-identifier-naming.LocalVariableCase,     value: camelBack  }
+  - { key: readability-identifier-naming.ParameterCase,         value: camelBack  }
+  # Require argument names to match exactly (instead of allowing a name to be a prefix/suffix of another)
+  # Note: 'true' is expected by clang-tidy 12+ but '1' is used for compatibility with older versions
+  - key: readability-inconsistent-declaration-parameter-name.Strict
+    value: 1
