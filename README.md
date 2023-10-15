@@ -1,5 +1,5 @@
 # Ship of Harkinian Android Port
-A port of Zelda3 to Android. <br>
+A port of Ship of Harkinian to Android. <br>
 
 Original Repository: https://github.com/HarbourMasters/Shipwright <br>
 
