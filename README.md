@@ -11,7 +11,7 @@ Tested On: Android 10 and Android 13 <br>
 
 <h3>Installation:</h3>
 1. Install the apk from here: https://github.com/Waterdish/Shipwright-Android/releases (Use soh.storage.apk if on Android 13 as scoped storage requires an extra permission) <br>
-2. Run one of the PC releases to generate an oot.otr and/or oot-mq.otr file. After launching the game on PC, you will be able to find these files in the same directory as soh.exe or soh.appimage. On macOS, these files can be found in /Users/<username>/Library/Application Support/com.shipofharkinian.soh/ <br>
+2. Run the latest nightly PC release (Found here: https://github.com/HarbourMasters/Shipwright#playtesting) to generate an oot.otr and/or oot-mq.otr file. After launching the game on PC, you will be able to find these files in the same directory as soh.exe or soh.appimage. On macOS, these files can be found in /Users/<username>/Library/Application Support/com.shipofharkinian.soh/ <br>
 3. Transfer the oot.otr(and/or oot-mq.otr) and soh.otr files to Android/data/com.dishii.soh/files/ <br>
 4. Launch the game <br>
 <br>
