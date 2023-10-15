@@ -11,3 +11,7 @@ Original Repository: https://github.com/HarbourMasters/Shipwright <br>
 4. Launch the game
 
 NOTE: Controller only. No touch controls yet. <br>
+
+<h3>Build Instructions:</h3><br>
+1.Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
+2.Open the project in android studio and build.<br>
