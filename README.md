@@ -18,10 +18,10 @@ Use Back/Select/- controller button to open Enhancements menu. Use touch control
 
 <h3>FAQ:</h3>
 Q: Why does it say no assets/extractor folder exists?<br>
-  A: The app is checking for a rom file to extract the assets of. This currently does not work. If you see this message then you have not placed oot.otr and/or soh.otr in Android/data/com.dishii.soh/files/. If you are on Android 13, make sure you are using the soh.storage.apk file. <br>
+  A: The app is checking for a rom file to extract the assets of. This currently does not work. If you see this message then you have not placed oot.otr and/or soh.otr in Android/data/com.dishii.soh/files/. If you are on Android 13, make sure you are using the soh.storage.apk file. <br> <br>
 
 Q: Why are these changes not in the main Shipwright repository?<br>
-  A: This started as just an experiment that ended up working. This code is not in a state to be merged with the main repository, but I welcome anybody to take code from this repo to help add the port to the main repository. <br>
+  A: This started as just an experiment that ended up working. This code is not in a state to be merged with the main repository, but I welcome anybody to take code from this repo to help add the port to the main repository. <br> <br>
 
 <h3>Build Instructions:</h3><br>
 1.Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
