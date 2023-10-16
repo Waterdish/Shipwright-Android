@@ -22,6 +22,10 @@ Use Back/Select/- controller button to open Enhancements menu. Use touch control
 Q: Why does it say no assets/extractor folder exists?<br>
   A: The app is checking for a rom file to extract the assets of. This currently does not work. If you see this message then you have not placed oot.otr and/or soh.otr in Android/data/com.dishii.soh/files/. If you are on Android 13, make sure you are using the soh.storage.apk file. <br> <br>
 
+Q: Why is it immediately crashing? <br>
+  A: otr files from previous installations of Ship of Harkinian will not work. The latest nightly build is required. 
+
+
 Q: Why are these changes not in the main Shipwright repository?<br>
   A: This started as just an experiment that ended up working. This code is not in a state to be merged with the main repository, but I welcome anybody to take code from this repo to help add the port to the main repository. The main changes made were pointing the app to search in the ExternalDataDir and editing the libultraship opengles backend to support opengl es 3.<br> <br>
 
