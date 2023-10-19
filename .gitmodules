@@ -1,0 +1,3 @@
+[submodule "app/jni/src/libultraship"]
+	path = app/jni/src/libultraship
+	url = https://github.com/Waterdish/libultraship.git
