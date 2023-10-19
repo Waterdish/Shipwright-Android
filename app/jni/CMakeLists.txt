@@ -15,7 +15,7 @@ set(ANDROID_NATIVE_API_LEVEL 23) # Adjust to your desired API level # or other A
 
 
 # SDL sources are in a subfolder named "SDL"
-add_subdirectory(SDL2)
+#add_subdirectory(SDL2)
 
 #include_directories(${CMAKE_CURRENT_BINARY_DIR}/glew)
 
