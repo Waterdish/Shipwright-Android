@@ -248,7 +248,6 @@ void Extractor::GetRoms(std::vector<std::string>& roms) {
         }
     }
     closedir(d);*/
-
     const char* androidAssetPath = SDL_AndroidGetExternalStoragePath();
     if (androidAssetPath == NULL) {
         printf("Error accessing Android assets directory: %s\n", SDL_GetError());
