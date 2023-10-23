@@ -9,7 +9,14 @@ NOTE: Controller only. No touch controls yet except for in the enhancements menu
 Supported (probably): Android 4.3+ (OpenGL ES 3.0 + required) <br>
 Tested On: Android 10 and Android 13 <br>
 
-<h3>Installation:</h3>
+<h3>Installation (Android 11+) :</h3>
+1. Install the apk from here: https://github.com/Waterdish/Shipwright-Android/releases (Use soh.storage.apk if on Android 13 as scoped storage requires an extra permission) <br>
+2. Run the latest nightly PC release (Found here: https://github.com/HarbourMasters/Shipwright/actions/runs/6539782569) to generate an oot.otr and/or oot-mq.otr file. After launching the game on PC, you will be able to find these files in the same directory as soh.exe or soh.appimage. On macOS, these files can be found in /Users/<username>/Library/Application Support/com.shipofharkinian.soh/ <br>
+3. Transfer the oot.otr(and/or oot-mq.otr) and soh.otr files to Android/data/com.dishii.soh/files/ <br>
+4. Launch the game <br>
+<br>
+
+<h3>Installation (Android 10 or below):</h3>
 1. Install the apk from here: https://github.com/Waterdish/Shipwright-Android/releases (Use soh.storage.apk if on Android 11+ as scoped storage requires an extra permission) <br>
 2. Open the app once. It will generate the directory for your rom. <br>
 3. Place your compatible "ZELOOTD.z64" rom (check here: https://ship.equipment/) at Android/data/com.dishii.soh/files/ <br>
@@ -23,8 +30,8 @@ Use Back/Select/- controller button to open Enhancements menu. Use touch control
 
 <h3>FAQ:</h3>
 Q: Why does it say No Rom Found?<br>
-  A: If you are on Android 10 or below, your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. If you are on Android 11+, use soh.storage.apk. As a backup, you can generate the otr using these PC builds of SOH https://github.com/HarbourMasters/Shipwright/actions/runs/6539782569<br> <br>
-
+  A: If you are on Android 10 or below, your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. If you are on Android 11+, generating the rom is currently broken <br> <br>
+  
 Q: Why is it immediately crashing? <br>
   A: Try deleting and re-extracting the OTR file (oot.otr). <br> <br>
 
@@ -35,11 +42,4 @@ Q: Why are these changes not in the main Shipwright repository?<br>
 1.Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
 2.Open the project in android studio and build.<br>
 
-
-<h3>Installation (OLD. For Version 1.0.0. Latest playtesting build is probably incompatible now) :</h3>
-1. Install the apk from here: https://github.com/Waterdish/Shipwright-Android/releases (Use soh.storage.apk if on Android 13 as scoped storage requires an extra permission) <br>
-2. Run the latest nightly PC release (Found here: https://github.com/HarbourMasters/Shipwright#playtesting) to generate an oot.otr and/or oot-mq.otr file. After launching the game on PC, you will be able to find these files in the same directory as soh.exe or soh.appimage. On macOS, these files can be found in /Users/<username>/Library/Application Support/com.shipofharkinian.soh/ <br>
-3. Transfer the oot.otr(and/or oot-mq.otr) and soh.otr files to Android/data/com.dishii.soh/files/ <br>
-4. Launch the game <br>
-<br>
 
