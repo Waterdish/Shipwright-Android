@@ -542,8 +542,8 @@ const char* Extractor::GetZapdVerStr() const {
 }
 
 std::string Extractor::Mkdtemp() {
-    std::string temp_dir = std::filesystem::temp_directory_path().string();
-    
+    std::string temp_dir = SDL_AndroidGetExternalStoragePath();//std::filesystem::temp_directory_path().string();
+
     // create 6 random alphanumeric characters
     static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     std::random_device rd;
@@ -581,7 +581,9 @@ bool Extractor::CallZapd(std::string installPath, std::string exportdir) {
     std::filesystem::copy(installPath + "/assets", tempdir + "/assets",
         std::filesystem::copy_options::recursive | std::filesystem::copy_options::update_existing);
 #else
-    std::filesystem::create_symlink(installPath + "/assets", tempdir + "/assets");
+    //std::filesystem::create_symlink(installPath + "/assets", tempdir + "/assets");
+    std::filesystem::copy(installPath + "/assets", tempdir + "/assets",
+                          std::filesystem::copy_options::recursive | std::filesystem::copy_options::update_existing);
 #endif
 
     std::filesystem::current_path(tempdir);
