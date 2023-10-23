@@ -36,7 +36,7 @@ Q: Why are these changes not in the main Shipwright repository?<br>
 2.Open the project in android studio and build.<br>
 
 
-<h3>Installation (OLD. For Version 1.0.0) :</h3>
+<h3>Installation (OLD. For Version 1.0.0. Latest playtesting build is probably incompatible now) :</h3>
 1. Install the apk from here: https://github.com/Waterdish/Shipwright-Android/releases (Use soh.storage.apk if on Android 13 as scoped storage requires an extra permission) <br>
 2. Run the latest nightly PC release (Found here: https://github.com/HarbourMasters/Shipwright#playtesting) to generate an oot.otr and/or oot-mq.otr file. After launching the game on PC, you will be able to find these files in the same directory as soh.exe or soh.appimage. On macOS, these files can be found in /Users/<username>/Library/Application Support/com.shipofharkinian.soh/ <br>
 3. Transfer the oot.otr(and/or oot-mq.otr) and soh.otr files to Android/data/com.dishii.soh/files/ <br>
