@@ -14,7 +14,7 @@ Tested On: Android 10 and Android 13 <br>
 2. Open the app once. It will generate the directory for your rom. <br>
 3. Place your compatible "ZELOOTD.z64" rom (check here: https://ship.equipment/) at Android/data/com.dishii.soh/files/ <br>
 4. Reopen the app and select "Yes" when prompted if you would like to generate an OTR. Select "Yes" when it finds your rom. Your screen will go black for approximately 30 seconds. It could take longer depending on your device. <br>
-5. When asked if you would like to extract another OTR file, select "No" to start the game. <br>
+5. When asked if you would like to extract another rom, select "No" to start the game. <br>
 6. It should launch straight into the game the next time you open the app. <br>
 <br>
   
@@ -29,15 +29,14 @@ Use Back/Select/- controller button to open Enhancements menu. Use touch control
 
 
 <h3>FAQ:</h3>
-Q: Why does it say no assets/extractor folder exists?<br>
-  A: The app is checking for a rom file to extract the assets of. This currently does not work. If you see this message then you have not placed oot.otr and/or soh.otr in Android/data/com.dishii.soh/files/. If you are on Android 13, make sure you are using the soh.storage.apk file. <br> <br>
+Q: Why does it say No Rom Found?<br>
+  A: Your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. Also check to make sure you are using soh.storage.apk if on Android 13+.<br> <br>
 
 Q: Why is it immediately crashing? <br>
-  A: otr files from previous installations of Ship of Harkinian will not work. The latest nightly build is required. 
-
+  A: Try deleting and re-extracting the OTR file (oot.otr). <br> <br>
 
 Q: Why are these changes not in the main Shipwright repository?<br>
-  A: This started as just an experiment that ended up working. This code is not in a state to be merged with the main repository, but I welcome anybody to take code from this repo to help add the port to the main repository. The main changes made were pointing the app to search in the ExternalDataDir and editing the libultraship opengles backend to support opengl es 3.<br> <br>
+  A: Working on it.<br> <br>
 
 <h3>Build Instructions:</h3>
 1.Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
