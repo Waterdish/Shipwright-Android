@@ -23,7 +23,7 @@ Use Back/Select/- controller button to open Enhancements menu. Use touch control
 
 <h3>FAQ:</h3>
 Q: Why does it say No Rom Found?<br>
-  A: Your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. Also check to make sure you are using soh.storage.apk if on Android 13+.<br> <br>
+  A: If you are on Android 10 or below, your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. If you are on Android 11+, use soh.storage.apk. As a backup, you can generate the otr using these PC builds of SOH https://github.com/HarbourMasters/Shipwright/actions/runs/6539782569<br> <br>
 
 Q: Why is it immediately crashing? <br>
   A: Try deleting and re-extracting the OTR file (oot.otr). <br> <br>
