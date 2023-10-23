@@ -28,15 +28,29 @@ public class MainActivity extends SDLActivity{
         super.onCreate(savedInstanceState);
 
         // Check if storage permissions are granted
-        if (Environment.isExternalStorageManager()) {
+        if (Environment.isExternalStorageManager() && hasStoragePermission()) {
             setupFiles();
         } else {
             requestStoragePermission();
         }
     }
 
+
+    // Check if storage permission is granted
+    private boolean hasStoragePermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED;
+    }
+
     // Request storage permission
     private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                STORAGE_PERMISSION_REQUEST_CODE);
+
         try {
             Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
             Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
@@ -90,6 +104,12 @@ public class MainActivity extends SDLActivity{
                 e.printStackTrace();
             }
         }
+    }
+
+    // Check if external storage is available and writable
+    private boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
 }
