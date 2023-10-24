@@ -19,8 +19,8 @@ Tested On: Android 10 and Android 13 <br>
 <h3>Installation Without PC (Lower Compatibility):</h3>
 1. Install the apk from here: https://github.com/Waterdish/Shipwright-Android/releases. Use the rompicker version if on Android 11+ <br>
 2. Open the app once. It will generate the directory for your rom. <br>
-3. a) If using soh.apk: Place your compatible "ZELOOTD.z64" rom (check here: https://ship.equipment/) at Android/data/com.dishii.soh/files/ <br>
-b) If using soh.storage.rompicker.apk: Select your "ZELOOTD.z64" rom where you have it.
+3.<b>If using soh.apk:</b> Place your compatible "ZELOOTD.z64" rom (check here: https://ship.equipment/) at Android/data/com.dishii.soh/files/ <br>
+<b>If using soh.storage.rompicker.apk:</b> Select your "ZELOOTD.z64" rom wherever you have it. <br>
 4. Select "Yes" when prompted by the app if you would like to generate an OTR. Select "Yes" when it finds your rom. Your screen will go black for approximately 30 seconds. It could take longer depending on your device. <br>
 5. When asked if you would like to extract another rom, select "No" to start the game. <br>
 6. It should launch straight into the game the next time you open the app. <br>
