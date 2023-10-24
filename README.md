@@ -31,7 +31,7 @@ Use Back/Select/- controller button to open Enhancements menu. Use touch control
 
 <h3>FAQ:</h3>
 Q: Why does it say No Rom Found?<br>
-  A: If you are on Android 10 or below, your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. If you are on Android 11+, generating the rom is currently broken <br> <br>
+  A: If you are on Android 10 or below, your rom file was not placed at Android/data/com.dishii.soh/files/. Check to make sure it is there next to soh.otr. If you are on Android 11+, you need to use the rompicker version. <br> <br>
   
 Q: Why is it immediately crashing? <br>
   A: Try deleting and re-extracting the OTR file (oot.otr). <br> <br>
