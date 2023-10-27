@@ -104,6 +104,48 @@ public class MainActivity extends SDLActivity{
                 e.printStackTrace();
             }
         }
+
+    }
+
+    private native void nativeHandleSelectedFile(String filePath);
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            Uri selectedFileUri = data.getData();
+            String fileName = "ZELOOTD.z64";
+            File destinationDirectory = getExternalFilesDir(null); // The second argument can specify a subdirectory, or you can pass null to use the root directory.
+            File destinationFile = new File(destinationDirectory, fileName);
+
+            if (destinationDirectory != null) {
+                try {
+                    InputStream in = getContentResolver().openInputStream(selectedFileUri);
+                    OutputStream out = new FileOutputStream(destinationFile);
+
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, bytesRead);
+                    }
+
+                    in.close();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            nativeHandleSelectedFile(destinationFile.getPath());
+        }
+    }
+
+    public void openFilePicker() {
+        // Create an Intent to open the file picker dialog
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+
+        // Start the file picker dialog
+        startActivityForResult(intent, 0);
     }
 
     // Check if external storage is available and writable

@@ -37,6 +37,11 @@
 #define UNREACHABLE __builtin_unreachable();
 #endif
 
+#ifdef __ANDROID__
+#include <jni.h>
+#include <string>
+#endif
+
 #include <stdlib.h>
 
 #include <SDL2/SDL_messagebox.h>
@@ -90,6 +95,27 @@ enum class ButtonId : int {
     FIND,
 };
 
+#ifdef __ANDROID__
+
+const char* javaRomPath = NULL;
+bool fileDialogOpen = false;
+
+//function to be called from C
+void openFilePickerFromC(JNIEnv* env, jobject javaObject) {
+    fileDialogOpen = true;
+    jclass javaClass = env->GetObjectClass(javaObject);
+    jmethodID openFilePickerMethod = env->GetMethodID(javaClass, "openFilePicker", "()V");
+    env->CallVoidMethod(javaObject, openFilePickerMethod);
+}
+// Define the native method to handle the selected file path
+extern "C" void JNICALL Java_com_dishii_soh_MainActivity_nativeHandleSelectedFile(JNIEnv* env, jobject obj, jstring filePath) {
+    const char* filePathStr = env->GetStringUTFChars(filePath, 0);
+    javaRomPath = strdup(filePathStr); // save filepath to string
+    fileDialogOpen = false;
+    env->ReleaseStringUTFChars(filePath, filePathStr);
+}
+
+#endif
 
 void Extractor::ShowErrorBox(const char* title, const char* text) {
 #ifdef _WIN32
@@ -324,9 +350,22 @@ bool Extractor::GetRomPathFromBox() {
         return false;
     }
     mCurrentRomPath = nameBuffer;
-    #else
-    auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64 *.n64 *.v64" }).result();
+#else
 
+#ifndef __ANDROID__
+    auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64 *.n64 *.v64" }).result();
+#else
+    JNIEnv* javaEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+    jobject javaObject = (jobject)SDL_AndroidGetActivity();
+    std::vector<std::string> selection;
+    openFilePickerFromC(javaEnv, javaObject);
+    while(fileDialogOpen){
+        //Do nothing until it's chosen
+        SDL_Delay(250);
+    }
+    SDL_Log("%s",javaRomPath);
+    selection.push_back(javaRomPath);
+#endif
     if (selection.empty()) {
         return false;
     }
@@ -334,6 +373,12 @@ bool Extractor::GetRomPathFromBox() {
     mCurrentRomPath = selection[0];
     #endif
     mCurRomSize = GetCurRomSize();
+#ifdef __ANDROID__
+    if (javaRomPath) {
+        free((void*)javaRomPath);
+        javaRomPath = NULL;
+    }
+#endif
     return true;
 }
 
@@ -542,7 +587,11 @@ const char* Extractor::GetZapdVerStr() const {
 }
 
 std::string Extractor::Mkdtemp() {
-    std::string temp_dir = SDL_AndroidGetExternalStoragePath();//std::filesystem::temp_directory_path().string();
+#ifndef __ANDROID__
+    std::string temp_dir = std::filesystem::temp_directory_path().string();
+#else
+    std::string temp_dir = SDL_AndroidGetExternalStoragePath();
+#endif
 
     // create 6 random alphanumeric characters
     static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -581,9 +630,12 @@ bool Extractor::CallZapd(std::string installPath, std::string exportdir) {
     std::filesystem::copy(installPath + "/assets", tempdir + "/assets",
         std::filesystem::copy_options::recursive | std::filesystem::copy_options::update_existing);
 #else
-    //std::filesystem::create_symlink(installPath + "/assets", tempdir + "/assets");
+#ifndef __ANDROID__
+    std::filesystem::create_symlink(installPath + "/assets", tempdir + "/assets");
+#else
     std::filesystem::copy(installPath + "/assets", tempdir + "/assets",
                           std::filesystem::copy_options::recursive | std::filesystem::copy_options::update_existing);
+#endif
 #endif
 
     std::filesystem::current_path(tempdir);
@@ -615,6 +667,22 @@ bool Extractor::CallZapd(std::string installPath, std::string exportdir) {
     // Normally the command window is hidden. We want the window to be shown here so the user can see the progess of the extraction.
     ShowWindow(cmdWindow, SW_SHOW);
     SetWindowPos(cmdWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+#endif
+
+#ifdef __ANDROID__
+    int ret;
+    SDL_MessageBoxData boxData = { 0 };
+    SDL_MessageBoxButtonData buttons[2] = { { 0 } };
+
+    buttons[0].buttonid = IDYES;
+    buttons[0].text = "Ok";
+    buttons[0].flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+    boxData.numbuttons = 1;
+    boxData.flags = SDL_MESSAGEBOX_INFORMATION;
+    boxData.message = "The screen will go black for at least 30 seconds, but it could take up to 3 minutes.";
+    boxData.title = "Starting Extraction";
+    boxData.buttons = buttons;
+    SDL_ShowMessageBox(&boxData, &ret);
 #endif
 
     zapd_main(argc, (char**)argv.data());
