@@ -338,7 +338,6 @@ extern "C" int zapd_main(int argc, char* argv[])
 
 				if (!Globals::Instance->singleThreaded) {
                     while (true) {
-                        printf("%i", numWorkersLeft);
                         if (numWorkersLeft <= 0)
                             break;
 
@@ -430,12 +429,9 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 			return 1;
 	}
 
-    printf("%s 1",fileListItem.c_str()); // It's getting stuck here VV. Need to print in Parse?
-
 	parseSuccessful = Parse(fileListItem, Globals::Instance->baseRomPath,
 	                        Globals::Instance->outputPath, fileMode, workerID);
 
-    printf("%s 2",fileListItem.c_str());
 	if (!parseSuccessful)
 		return 1;
 
@@ -454,7 +450,6 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 	}
 	else
 	{
-        printf("%s 3",fileListItem.c_str());
 		for (int i = 0; i < Globals::Instance->workerData[workerID]->files.size(); i++)
 		{
 			delete Globals::Instance->workerData[workerID]->files[i];
@@ -476,11 +471,9 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path& outPath,
            ZFileMode fileMode, int workerID)
 {
-    printf("%i parse 1",workerID);
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError eResult = doc.LoadFile(xmlFilePath.string().c_str());
 
-    printf("%i parse 2",workerID);
 	if (eResult != tinyxml2::XML_SUCCESS)
 	{
 		// TODO: use XMLDocument::ErrorIDToName to get more specific error messages here
@@ -489,9 +482,7 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 		return false;
 	}
 
-    printf("%i parse 3",workerID);
 	tinyxml2::XMLNode* root = doc.FirstChild();
-    printf("%i parse 4",workerID);
 
 	if (root == nullptr)
 	{
@@ -501,7 +492,6 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 		return false;
 	}
 
-    printf("%i parse 5",workerID);
 	for (tinyxml2::XMLElement* child = root->FirstChildElement(); child != NULL;
 	     child = child->NextSiblingElement())
 	{
@@ -555,7 +545,6 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 			HANDLE_ERROR(WarningType::InvalidXML, errorHeader, errorBody);
 		}
 	}
-    printf("%i parse 6",workerID);
 
 	if (fileMode != ZFileMode::ExternalFile)
 	{
@@ -582,7 +571,6 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 		if (exporterSet != nullptr && exporterSet->endXMLFunc != nullptr)
 			exporterSet->endXMLFunc();
 	}
-    printf("%i parse 7",workerID);
 
 	return true;
 }
