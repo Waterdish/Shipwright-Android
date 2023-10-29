@@ -4,6 +4,14 @@
 #include "Utils/Path.h"
 #include "WarningHandler.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+
+// Define a custom macro to replace printf with __android_log_print
+#define printf(...) __android_log_print(ANDROID_LOG_INFO, "YourTag", __VA_ARGS__)
+#endif
+
+
 #include "ZAnimation.h"
 ZNormalAnimation nAnim(nullptr);
 ZCurveAnimation cAnim(nullptr);
@@ -306,6 +314,7 @@ extern "C" int zapd_main(int argc, char* argv[])
 				auto start = std::chrono::steady_clock::now();
 				int fileListSize = fileList.size();
 				Globals::Instance->singleThreaded = false;
+                Globals::Instance->verbosity = VerbosityLevel::VERBOSITY_INFO;
 
 				for (int i = 0; i < fileListSize; i++)
 					Globals::Instance->workerData[i] = new FileWorker();
@@ -327,16 +336,14 @@ extern "C" int zapd_main(int argc, char* argv[])
 					}
 				}
 
-				if (!Globals::Instance->singleThreaded)
-				{
-					while (true)
-					{
-						if (numWorkersLeft <= 0)
-							break;
+				if (!Globals::Instance->singleThreaded) {
+                    while (true) {
+                        if (numWorkersLeft <= 0)
+                            break;
 
-						std::this_thread::sleep_for(std::chrono::milliseconds(250));
-					}
-				}
+                        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                    }
+                }
 
 				auto end = std::chrono::steady_clock::now();
 				auto diff =

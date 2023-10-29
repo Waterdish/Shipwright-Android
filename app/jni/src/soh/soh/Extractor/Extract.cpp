@@ -66,27 +66,27 @@ static constexpr uint32_t OOT_PAL_10 = 0xB044B569;
 static constexpr uint32_t OOT_PAL_11 = 0xB2055FBD;
 
 static const std::unordered_map<uint32_t, const char*> verMap = {
-    { OOT_PAL_GC, "PAL Gamecube" },
-    { OOT_PAL_MQ, "PAL MQ" },
-    { OOT_PAL_GC_DBG1, "PAL Debug 1" },
-    { OOT_PAL_GC_DBG2, "PAL Debug 2" },
-    { OOT_PAL_GC_MQ_DBG, "PAL MQ Debug" },
-    { OOT_PAL_10, "PAL N64 1.0" },
-    { OOT_PAL_11, "PAL N64 1.1" },
+        { OOT_PAL_GC, "PAL Gamecube" },
+        { OOT_PAL_MQ, "PAL MQ" },
+        { OOT_PAL_GC_DBG1, "PAL Debug 1" },
+        { OOT_PAL_GC_DBG2, "PAL Debug 2" },
+        { OOT_PAL_GC_MQ_DBG, "PAL MQ Debug" },
+        { OOT_PAL_10, "PAL N64 1.0" },
+        { OOT_PAL_11, "PAL N64 1.1" },
 };
 
 // TODO only check the first 54MB of the rom.
 static constexpr std::array<const uint32_t, 10> goodCrcs = {
-    0xfa8c0555, // MQ DBG 64MB (Original overdump)
-    0x8652ac4c, // MQ DBG 64MB
-    0x5B8A1EB7, // MQ DBG 64MB (Empty overdump)
-    0x1f731ffe, // MQ DBG 54MB
-    0x044b3982, // NMQ DBG 54MB
-    0xEB15D7B9, // NMQ DBG 64MB
-    0xDA8E61BF, // GC PAL
-    0x7A2FAE68, // GC MQ PAL
-    0xFD9913B1, // N64 PAL 1.0
-    0xE033FBBA, // N64 PAL 1.1
+        0xfa8c0555, // MQ DBG 64MB (Original overdump)
+        0x8652ac4c, // MQ DBG 64MB
+        0x5B8A1EB7, // MQ DBG 64MB (Empty overdump)
+        0x1f731ffe, // MQ DBG 54MB
+        0x044b3982, // NMQ DBG 54MB
+        0xEB15D7B9, // NMQ DBG 64MB
+        0xDA8E61BF, // GC PAL
+        0x7A2FAE68, // GC MQ PAL
+        0xFD9913B1, // N64 PAL 1.0
+        0xE033FBBA, // N64 PAL 1.1
 };
 
 enum class ButtonId : int {
@@ -371,7 +371,7 @@ bool Extractor::GetRomPathFromBox() {
     }
 
     mCurrentRomPath = selection[0];
-    #endif
+#endif
     mCurRomSize = GetCurRomSize();
 #ifdef __ANDROID__
     if (javaRomPath) {
@@ -459,7 +459,7 @@ bool Extractor::ManuallySearchForRomMatchingType(RomSearchMode searchMode) {
 
     char msgBuf[150];
     snprintf(msgBuf, 150, "The selected rom does not match the expected game type\nExpected type: %s.\n\nDo you want to search again?",
-        searchMode == RomSearchMode::MQ ? "Master Quest" : "Vanilla");
+             searchMode == RomSearchMode::MQ ? "Master Quest" : "Vanilla");
 
     while ((searchMode == RomSearchMode::Vanilla && IsMasterQuest()) ||
            (searchMode == RomSearchMode::MQ && !IsMasterQuest())) {
@@ -686,6 +686,8 @@ bool Extractor::CallZapd(std::string installPath, std::string exportdir) {
 #endif
 
     zapd_main(argc, (char**)argv.data());
+
+    SDL_Log("zapd_main finished");
 
 #ifdef _WIN32
     // Hide the command window again.
