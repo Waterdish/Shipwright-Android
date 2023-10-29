@@ -337,7 +337,11 @@ target_include_directories(ZAPDLib PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../libpng
 )
 
-target_link_libraries(ZAPDLib PRIVATE png)
+if (CMAKE_SYSTEM_NAME STREQUAL "Android")
+    target_link_libraries(ZAPDLib PRIVATE png log)
+else()
+    target_link_libraries(ZAPDLib PRIVATE png)
+endif()
 
 
 target_include_directories(${PROJECT_NAME} PRIVATE

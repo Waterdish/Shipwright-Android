@@ -37,6 +37,11 @@
 #define UNREACHABLE __builtin_unreachable();
 #endif
 
+#ifdef __ANDROID__
+#include <jni.h>
+#include <string>
+#endif
+
 #include <stdlib.h>
 
 #include <SDL2/SDL_messagebox.h>
@@ -61,27 +66,27 @@ static constexpr uint32_t OOT_PAL_10 = 0xB044B569;
 static constexpr uint32_t OOT_PAL_11 = 0xB2055FBD;
 
 static const std::unordered_map<uint32_t, const char*> verMap = {
-    { OOT_PAL_GC, "PAL Gamecube" },
-    { OOT_PAL_MQ, "PAL MQ" },
-    { OOT_PAL_GC_DBG1, "PAL Debug 1" },
-    { OOT_PAL_GC_DBG2, "PAL Debug 2" },
-    { OOT_PAL_GC_MQ_DBG, "PAL MQ Debug" },
-    { OOT_PAL_10, "PAL N64 1.0" },
-    { OOT_PAL_11, "PAL N64 1.1" },
+        { OOT_PAL_GC, "PAL Gamecube" },
+        { OOT_PAL_MQ, "PAL MQ" },
+        { OOT_PAL_GC_DBG1, "PAL Debug 1" },
+        { OOT_PAL_GC_DBG2, "PAL Debug 2" },
+        { OOT_PAL_GC_MQ_DBG, "PAL MQ Debug" },
+        { OOT_PAL_10, "PAL N64 1.0" },
+        { OOT_PAL_11, "PAL N64 1.1" },
 };
 
 // TODO only check the first 54MB of the rom.
 static constexpr std::array<const uint32_t, 10> goodCrcs = {
-    0xfa8c0555, // MQ DBG 64MB (Original overdump)
-    0x8652ac4c, // MQ DBG 64MB
-    0x5B8A1EB7, // MQ DBG 64MB (Empty overdump)
-    0x1f731ffe, // MQ DBG 54MB
-    0x044b3982, // NMQ DBG 54MB
-    0xEB15D7B9, // NMQ DBG 64MB
-    0xDA8E61BF, // GC PAL
-    0x7A2FAE68, // GC MQ PAL
-    0xFD9913B1, // N64 PAL 1.0
-    0xE033FBBA, // N64 PAL 1.1
+        0xfa8c0555, // MQ DBG 64MB (Original overdump)
+        0x8652ac4c, // MQ DBG 64MB
+        0x5B8A1EB7, // MQ DBG 64MB (Empty overdump)
+        0x1f731ffe, // MQ DBG 54MB
+        0x044b3982, // NMQ DBG 54MB
+        0xEB15D7B9, // NMQ DBG 64MB
+        0xDA8E61BF, // GC PAL
+        0x7A2FAE68, // GC MQ PAL
+        0xFD9913B1, // N64 PAL 1.0
+        0xE033FBBA, // N64 PAL 1.1
 };
 
 enum class ButtonId : int {
@@ -90,6 +95,27 @@ enum class ButtonId : int {
     FIND,
 };
 
+#ifdef __ANDROID__
+
+const char* javaRomPath = NULL;
+bool fileDialogOpen = false;
+
+//function to be called from C
+void openFilePickerFromC(JNIEnv* env, jobject javaObject) {
+    fileDialogOpen = true;
+    jclass javaClass = env->GetObjectClass(javaObject);
+    jmethodID openFilePickerMethod = env->GetMethodID(javaClass, "openFilePicker", "()V");
+    env->CallVoidMethod(javaObject, openFilePickerMethod);
+}
+// Define the native method to handle the selected file path
+extern "C" void JNICALL Java_com_dishii_soh_MainActivity_nativeHandleSelectedFile(JNIEnv* env, jobject obj, jstring filePath) {
+    const char* filePathStr = env->GetStringUTFChars(filePath, 0);
+    javaRomPath = strdup(filePathStr); // save filepath to string
+    fileDialogOpen = false;
+    env->ReleaseStringUTFChars(filePath, filePathStr);
+}
+
+#endif
 
 void Extractor::ShowErrorBox(const char* title, const char* text) {
 #ifdef _WIN32
@@ -324,16 +350,35 @@ bool Extractor::GetRomPathFromBox() {
         return false;
     }
     mCurrentRomPath = nameBuffer;
-    #else
-    auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64 *.n64 *.v64" }).result();
+#else
 
+#ifndef __ANDROID__
+    auto selection = pfd::open_file("Select a file", ".", { "N64 Roms", "*.z64 *.n64 *.v64" }).result();
+#else
+    JNIEnv* javaEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+    jobject javaObject = (jobject)SDL_AndroidGetActivity();
+    std::vector<std::string> selection;
+    openFilePickerFromC(javaEnv, javaObject);
+    while(fileDialogOpen){
+        //Do nothing until it's chosen
+        SDL_Delay(250);
+    }
+    SDL_Log("%s",javaRomPath);
+    selection.push_back(javaRomPath);
+#endif
     if (selection.empty()) {
         return false;
     }
 
     mCurrentRomPath = selection[0];
-    #endif
+#endif
     mCurRomSize = GetCurRomSize();
+#ifdef __ANDROID__
+    if (javaRomPath) {
+        free((void*)javaRomPath);
+        javaRomPath = NULL;
+    }
+#endif
     return true;
 }
 
@@ -414,7 +459,7 @@ bool Extractor::ManuallySearchForRomMatchingType(RomSearchMode searchMode) {
 
     char msgBuf[150];
     snprintf(msgBuf, 150, "The selected rom does not match the expected game type\nExpected type: %s.\n\nDo you want to search again?",
-        searchMode == RomSearchMode::MQ ? "Master Quest" : "Vanilla");
+             searchMode == RomSearchMode::MQ ? "Master Quest" : "Vanilla");
 
     while ((searchMode == RomSearchMode::Vanilla && IsMasterQuest()) ||
            (searchMode == RomSearchMode::MQ && !IsMasterQuest())) {
@@ -542,8 +587,12 @@ const char* Extractor::GetZapdVerStr() const {
 }
 
 std::string Extractor::Mkdtemp() {
-    std::string temp_dir = SDL_AndroidGetExternalStoragePath();//std::filesystem::temp_directory_path().string();
-    
+#ifndef __ANDROID__
+    std::string temp_dir = std::filesystem::temp_directory_path().string();
+#else
+    std::string temp_dir = SDL_AndroidGetExternalStoragePath();
+#endif
+
     // create 6 random alphanumeric characters
     static const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     std::random_device rd;
@@ -581,9 +630,12 @@ bool Extractor::CallZapd(std::string installPath, std::string exportdir) {
     std::filesystem::copy(installPath + "/assets", tempdir + "/assets",
         std::filesystem::copy_options::recursive | std::filesystem::copy_options::update_existing);
 #else
-    //std::filesystem::create_symlink(installPath + "/assets", tempdir + "/assets");
+#ifndef __ANDROID__
+    std::filesystem::create_symlink(installPath + "/assets", tempdir + "/assets");
+#else
     std::filesystem::copy(installPath + "/assets", tempdir + "/assets",
                           std::filesystem::copy_options::recursive | std::filesystem::copy_options::update_existing);
+#endif
 #endif
 
     std::filesystem::current_path(tempdir);
@@ -617,7 +669,25 @@ bool Extractor::CallZapd(std::string installPath, std::string exportdir) {
     SetWindowPos(cmdWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 #endif
 
+#ifdef __ANDROID__
+    int ret;
+    SDL_MessageBoxData boxData = { 0 };
+    SDL_MessageBoxButtonData buttons[2] = { { 0 } };
+
+    buttons[0].buttonid = IDYES;
+    buttons[0].text = "Ok";
+    buttons[0].flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+    boxData.numbuttons = 1;
+    boxData.flags = SDL_MESSAGEBOX_INFORMATION;
+    boxData.message = "The screen will go black for at least 30 seconds, but it could take up to 3 minutes.";
+    boxData.title = "Starting Extraction";
+    boxData.buttons = buttons;
+    SDL_ShowMessageBox(&boxData, &ret);
+#endif
+
     zapd_main(argc, (char**)argv.data());
+
+    SDL_Log("zapd_main finished");
 
 #ifdef _WIN32
     // Hide the command window again.
