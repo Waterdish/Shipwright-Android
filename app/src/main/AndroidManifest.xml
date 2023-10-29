@@ -5,7 +5,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dishii.soh"
     android:versionCode="1"
-    android:versionName="1.0.1"
+    android:versionName="1.0.2"
     android:installLocation="auto">
 
     <!-- OpenGL ES 3.0 -->
