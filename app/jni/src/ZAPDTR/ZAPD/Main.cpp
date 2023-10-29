@@ -4,6 +4,14 @@
 #include "Utils/Path.h"
 #include "WarningHandler.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+
+// Define a custom macro to replace printf with __android_log_print
+#define printf(...) __android_log_print(ANDROID_LOG_INFO, "YourTag", __VA_ARGS__)
+#endif
+
+
 #include "ZAnimation.h"
 ZNormalAnimation nAnim(nullptr);
 ZCurveAnimation cAnim(nullptr);
@@ -306,6 +314,7 @@ extern "C" int zapd_main(int argc, char* argv[])
 				auto start = std::chrono::steady_clock::now();
 				int fileListSize = fileList.size();
 				Globals::Instance->singleThreaded = false;
+                Globals::Instance->verbosity = VerbosityLevel::VERBOSITY_INFO;
 
 				for (int i = 0; i < fileListSize; i++)
 					Globals::Instance->workerData[i] = new FileWorker();
@@ -327,16 +336,15 @@ extern "C" int zapd_main(int argc, char* argv[])
 					}
 				}
 
-				if (!Globals::Instance->singleThreaded)
-				{
-					while (true)
-					{
-						if (numWorkersLeft <= 0)
-							break;
+				if (!Globals::Instance->singleThreaded) {
+                    while (true) {
+                        printf("%i", numWorkersLeft);
+                        if (numWorkersLeft <= 0)
+                            break;
 
-						std::this_thread::sleep_for(std::chrono::milliseconds(250));
-					}
-				}
+                        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                    }
+                }
 
 				auto end = std::chrono::steady_clock::now();
 				auto diff =
@@ -422,9 +430,12 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 			return 1;
 	}
 
+    printf("%s 1",fileListItem.c_str()); // It's getting stuck here VV. Need to print in Parse?
+
 	parseSuccessful = Parse(fileListItem, Globals::Instance->baseRomPath,
 	                        Globals::Instance->outputPath, fileMode, workerID);
 
+    printf("%s 2",fileListItem.c_str());
 	if (!parseSuccessful)
 		return 1;
 
@@ -443,6 +454,7 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 	}
 	else
 	{
+        printf("%s 3",fileListItem.c_str());
 		for (int i = 0; i < Globals::Instance->workerData[workerID]->files.size(); i++)
 		{
 			delete Globals::Instance->workerData[workerID]->files[i];
@@ -464,9 +476,11 @@ int ExtractFunc(int workerID, int fileListSize, std::string fileListItem, ZFileM
 bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path& outPath,
            ZFileMode fileMode, int workerID)
 {
+    printf("%i parse 1",workerID);
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError eResult = doc.LoadFile(xmlFilePath.string().c_str());
 
+    printf("%i parse 2",workerID);
 	if (eResult != tinyxml2::XML_SUCCESS)
 	{
 		// TODO: use XMLDocument::ErrorIDToName to get more specific error messages here
@@ -475,7 +489,9 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 		return false;
 	}
 
+    printf("%i parse 3",workerID);
 	tinyxml2::XMLNode* root = doc.FirstChild();
+    printf("%i parse 4",workerID);
 
 	if (root == nullptr)
 	{
@@ -485,6 +501,7 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 		return false;
 	}
 
+    printf("%i parse 5",workerID);
 	for (tinyxml2::XMLElement* child = root->FirstChildElement(); child != NULL;
 	     child = child->NextSiblingElement())
 	{
@@ -538,6 +555,7 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 			HANDLE_ERROR(WarningType::InvalidXML, errorHeader, errorBody);
 		}
 	}
+    printf("%i parse 6",workerID);
 
 	if (fileMode != ZFileMode::ExternalFile)
 	{
@@ -564,6 +582,7 @@ bool Parse(const fs::path& xmlFilePath, const fs::path& basePath, const fs::path
 		if (exporterSet != nullptr && exporterSet->endXMLFunc != nullptr)
 			exporterSet->endXMLFunc();
 	}
+    printf("%i parse 7",workerID);
 
 	return true;
 }
