@@ -946,8 +946,8 @@ typedef struct {
     /* 0x5C3C */ OSMesg audioResetMesgs[1];
     /* 0x5C40 */ OSMesg cmdProcMsgs[4];
     /* 0x5C50 */ AudioCmd cmdBuf[0x100];
-    u16 seqToPlay[4];
-    u8 seqReplaced[4];
+    u16 seqToPlay[8];
+    u8 seqReplaced[8];
 } AudioContext; // size = 0x6450
 
 typedef struct {
