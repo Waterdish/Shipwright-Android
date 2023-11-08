@@ -332,15 +332,32 @@ endif()
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	set(CMAKE_FIND_FRAMEWORK LAST)
 endif()
-#find_package(PNG REQUIRED)
-target_include_directories(ZAPDLib PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../libpng
-)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+	set(CMAKE_FIND_FRAMEWORK LAST)
+endif()
+
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
+    find_package(PNG REQUIRED)
+endif()
+
+################################################################################
+# Find/download PNG for Android
+################################################################################
 if (CMAKE_SYSTEM_NAME STREQUAL "Android")
-    target_link_libraries(ZAPDLib PRIVATE png log)
-else()
-    target_link_libraries(ZAPDLib PRIVATE png)
+    find_package(PNG QUIET)
+    if (NOT ${PNG_FOUND})
+    	include(FetchContent)
+        FetchContent_Declare(
+            png
+	    GIT_REPOSITORY https://github.com/glennrp/libpng.git
+	    GIT_TAG v1.6.37
+    	)
+        message("PNG not found. Downloading now...")
+        FetchContent_MakeAvailable(png)
+        message("PNG downloaded to " ${FETCHCONTENT_BASE_DIR}/png-src)
+        set (PNG_PNG_INCLUDE_DIR ${png_BINARY_DIR} ${png_SOURCE_DIR})
+    endif()
 endif()
 
 
@@ -486,6 +503,17 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
         "libultraship;"
         PNG::PNG
     )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+	find_package(Threads REQUIRED)
+	set(ADDITIONAL_LIBRARY_DEPENDENCIES
+		"ZAPDUtils;"
+		-Wl,--whole-archive $<TARGET_LINKER_FILE_DIR:OTRExporter>/$<TARGET_LINKER_FILE_NAME:OTRExporter> -Wl,--no-whole-archive
+		"libultraship;"
+		png
+		${CMAKE_DL_LIBS}
+		Threads::Threads
+	)
 else()
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
@@ -493,6 +521,7 @@ else()
 		"ZAPDUtils;"
 		-Wl,--whole-archive $<TARGET_LINKER_FILE_DIR:OTRExporter>/$<TARGET_LINKER_FILE_NAME:OTRExporter> -Wl,--no-whole-archive
 		"libultraship;"
+		PNG::PNG
 		${CMAKE_DL_LIBS}
 		Threads::Threads
 	)

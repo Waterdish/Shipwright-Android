@@ -11,8 +11,6 @@
 #include <libultraship/bridge.h>
 #include "soh/CrashHandlerExp.h"
 
-#include <SDL2/SDL.h>
-
 s32 gScreenWidth = SCREEN_WIDTH;
 s32 gScreenHeight = SCREEN_HEIGHT;
 size_t gSystemHeapSize = 0;
@@ -45,7 +43,7 @@ void Main_LogSystemHeap(void) {
     osSyncPrintf(VT_RST);
 }
 
-/*#ifdef _WIN32
+#ifdef _WIN32
 int SDL_main(int argc, char** argv)
 {
     AllocConsole();
@@ -54,25 +52,26 @@ int SDL_main(int argc, char** argv)
     (void)freopen("CONOUT$", "w", stderr);
 #ifndef _DEBUG
     ShowWindow(GetConsoleWindow(), SW_HIDE);
-#endif*/
+#endif
 
-//#else //_WIN32
+#elif defined(__ANDROID__)
 int SDL_main(int argc, char** argv)
 {
-//#endif
+#else //_WIN32
+int main(int argc, char** argv)
+{
+#endif
 
     GameConsole_Init();
-    SDL_Log("Initializing OTR");
     InitOTR();
-    SDL_Log("Done with Init OTR");
     // TODO: Was moved to below InitOTR because it requires window to be setup. But will be late to catch crashes.
     CrashHandlerRegisterCallback(CrashHandler_PrintSohData);
-    SDL_Log("running");
     BootCommands_Init();
-    SDL_Log("boot commands run");
 
+    Heaps_Alloc();
     Main(0);
     DeinitOTR();
+    Heaps_Free();
     return 0;
 }
 
@@ -93,7 +92,6 @@ void Main(void* arg) {
     PreNmiBuff_Init(gAppNmiBufferPtr);
     Fault_Init();
     SysCfb_Init(0);
-    Heaps_Alloc();
     sysHeap = (uintptr_t)gSystemHeap;
     fb = SysCfb_GetFbPtr(0);
     gSystemHeapSize = 1024 * 1024 * 4;
@@ -146,7 +144,6 @@ void Main(void* arg) {
 
     Graph_ThreadEntry(0);
 
-    SDL_Log("starting main thread");
     while (true) {
         msg = NULL;
         osRecvMesg(&irqMgrMsgQ, (OSMesg*)&msg, OS_MESG_BLOCK);
@@ -163,6 +160,4 @@ void Main(void* arg) {
     osDestroyThread(&sGraphThread);
     func_800FBFD8();
     osSyncPrintf("mainproc 実行終了\n"); // "End of execution"
-
-    Heaps_Free();
 }

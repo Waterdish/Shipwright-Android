@@ -4,14 +4,6 @@
 #include "Utils/Path.h"
 #include "WarningHandler.h"
 
-#ifdef __ANDROID__
-#include <android/log.h>
-
-// Define a custom macro to replace printf with __android_log_print
-#define printf(...) __android_log_print(ANDROID_LOG_INFO, "YourTag", __VA_ARGS__)
-#endif
-
-
 #include "ZAnimation.h"
 ZNormalAnimation nAnim(nullptr);
 ZCurveAnimation cAnim(nullptr);
@@ -230,21 +222,32 @@ extern "C" int zapd_main(int argc, char* argv[])
 		}
 		else if (arg == "--norom") 
 		{
-			Globals::Instance->onlyGenSohOtr = true;
+			Globals::Instance->onlyGenCustomOtr = true;
 		}
 	}
 
-
 	// Parse File Mode
 	ExporterSet* exporterSet = Globals::Instance->GetExporterSet();
-	
-	if(Globals::Instance->onlyGenSohOtr) {
-		exporterSet->endProgramFunc();
 
-		delete g;
-		return 0;
+	// We've parsed through our commands once. If an exporter exists, it's been set by now.
+	// Now we'll parse through them again but pass them on to our exporter if one is available.
+	if (exporterSet != nullptr && exporterSet->parseArgsFunc != nullptr) {
+		for (int32_t i = 2; i < argc; i++) {
+			exporterSet->parseArgsFunc(argc, argv, i);
+		}
 	}
-	
+
+	if (Globals::Instance->onlyGenCustomOtr) {
+ 		if (exporterSet != nullptr) {
+ 			exporterSet->endProgramFunc();
+ 		} else {
+ 			printf("Error: No exporter set, unable to make custom otr.\n");
+ 		}
+
+ 		delete g;
+ 		return 0;
+ 	}
+
 	std::string buildMode = argv[1];
 	ZFileMode fileMode = ZFileMode::Invalid;
 
@@ -273,15 +276,6 @@ extern "C" int zapd_main(int argc, char* argv[])
 
 	if (fileMode == ZFileMode::ExtractDirectory)
 		Globals::Instance->rom = new ZRom(Globals::Instance->baseRomPath.string());
-
-	// We've parsed through our commands once. If an exporter exists, it's been set by now.
-	// Now we'll parse through them again but pass them on to our exporter if one is available.
-
-	if (exporterSet != nullptr && exporterSet->parseArgsFunc != nullptr)
-	{
-		for (int32_t i = 2; i < argc; i++)
-			exporterSet->parseArgsFunc(argc, argv, i);
-	}
 
 	if (Globals::Instance->verbosity >= VerbosityLevel::VERBOSITY_INFO)
 		printf("ZAPD: Zelda Asset Processor For Decomp: %s\n", gBuildHash);
@@ -314,7 +308,6 @@ extern "C" int zapd_main(int argc, char* argv[])
 				auto start = std::chrono::steady_clock::now();
 				int fileListSize = fileList.size();
 				Globals::Instance->singleThreaded = false;
-                Globals::Instance->verbosity = VerbosityLevel::VERBOSITY_INFO;
 
 				for (int i = 0; i < fileListSize; i++)
 					Globals::Instance->workerData[i] = new FileWorker();
@@ -336,14 +329,16 @@ extern "C" int zapd_main(int argc, char* argv[])
 					}
 				}
 
-				if (!Globals::Instance->singleThreaded) {
-                    while (true) {
-                        if (numWorkersLeft <= 0)
-                            break;
+				if (!Globals::Instance->singleThreaded)
+				{
+					while (true)
+					{
+						if (numWorkersLeft <= 0)
+							break;
 
-                        std::this_thread::sleep_for(std::chrono::milliseconds(250));
-                    }
-                }
+						std::this_thread::sleep_for(std::chrono::milliseconds(250));
+					}
+				}
 
 				auto end = std::chrono::steady_clock::now();
 				auto diff =

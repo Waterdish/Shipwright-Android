@@ -522,11 +522,11 @@ void DrawItemCount(ItemTrackerItem item) {
         ImGui::SetCursorScreenPos(
             ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
-        ImGui::Text("%s", currentString.c_str());
+        ImGui::Text(currentString.c_str());
         ImGui::PopStyleColor();
         ImGui::SameLine(0, 0.0f);
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
-        ImGui::Text("%s", maxString.c_str());
+        ImGui::Text(maxString.c_str());
         ImGui::PopStyleColor();
     } else {
         ImGui::SetCursorScreenPos(ImVec2(p.x, p.y - 14));

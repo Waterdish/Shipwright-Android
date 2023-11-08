@@ -946,8 +946,13 @@ typedef struct {
     /* 0x5C3C */ OSMesg audioResetMesgs[1];
     /* 0x5C40 */ OSMesg cmdProcMsgs[4];
     /* 0x5C50 */ AudioCmd cmdBuf[0x100];
+#ifdef __ANDROID__ //this fixes undefined behavior on 32 bit devices.
     u16 seqToPlay[8];
     u8 seqReplaced[8];
+#else
+    u16 seqToPlay[4];
+    u8 seqReplaced[4];
+#endif
 } AudioContext; // size = 0x6450
 
 typedef struct {

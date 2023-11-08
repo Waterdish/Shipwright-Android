@@ -51,6 +51,8 @@ std::string GetWindowButtonText(const char* text, bool menuOpen) {
     return buttonText;
 }
 
+static const char* imguiScaleOptions[4] = { "Small", "Normal", "Large", "X-Large" };
+
     static const char* filters[3] = {
 #ifdef __WIIU__
             "",
@@ -137,7 +139,7 @@ void DrawShipMenu() {
             LUS::Context::GetInstance()->GetWindow()->GetGui()->GetMenuBar()->ToggleVisibility();
         }
         UIWidgets::Spacer(0);
-#if !defined(__SWITCH__) && !defined(__WIIU__)
+#if !defined(__SWITCH__) && !defined(__WIIU__) && !defined(__ANDROID__)
         if (ImGui::MenuItem("Toggle Fullscreen", "F11")) {
             LUS::Context::GetInstance()->GetWindow()->ToggleFullscreen();
         }
@@ -380,7 +382,19 @@ void DrawSettingsMenu() {
             }
 
             UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
+            ImGui::Text("ImGui Menu Scale");
+            ImGui::SameLine();
+            ImGui::TextColored({ 0.85f, 0.35f, 0.0f, 1.0f }, "(Experimental)");
+#ifdef __ANDROID__ //Defaults the android scale to the value set in OTRGlobals
+            if (UIWidgets::EnhancementCombobox("gImGuiScale", imguiScaleOptions, 3)) {
+#else
+            if (UIWidgets::EnhancementCombobox("gImGuiScale", imguiScaleOptions, 1)) {
+#endif
+                OTRGlobals::Instance->ScaleImGui();
+            }
+            UIWidgets::Tooltip("Changes the scaling of the ImGui menu elements.");
 
+            UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
             
             static std::unordered_map<LUS::WindowBackend, const char*> windowBackendNames = {
                 { LUS::WindowBackend::DX11, "DirectX" },
@@ -586,6 +600,8 @@ void DrawEnhancementsMenu() {
                     "Wearing the Bunny Hood grants a speed increase like in Majora's Mask. The longer jump option is not accounted for in randomizer logic.\n\n"
                     "Also disables NPC's reactions to wearing the Bunny Hood."
                 );
+                UIWidgets::PaddedEnhancementCheckbox("Bunny Hood Equippable as Adult", "gAdultBunnyHood", true, false, (CVarGetInteger("gMMBunnyHood", BUNNY_HOOD_VANILLA) == BUNNY_HOOD_VANILLA), "Only available with increased bunny hood speed", UIWidgets::CheckboxGraphics::Cross, false);
+                UIWidgets::Tooltip("Allows the bunny hood to be equipped normally from the pause menu as adult.");
                 UIWidgets::PaddedEnhancementCheckbox("Mask Select in Inventory", "gMaskSelect", true, false);
                 UIWidgets::Tooltip("After completing the mask trading sub-quest, press A and any direction on the mask slot to change masks");
                 UIWidgets::PaddedEnhancementCheckbox("Nuts explode bombs", "gNutsExplodeBombs", true, false);
@@ -672,6 +688,8 @@ void DrawEnhancementsMenu() {
                 UIWidgets::PaddedEnhancementCheckbox("Always Win Dampe Digging Game", "gDampeWin", true, false, SaveManager::Instance->IsRandoFile(),
                                                         "This setting is always enabled in randomizer files", UIWidgets::CheckboxGraphics::Checkmark);
                 UIWidgets::Tooltip("Always win the heart piece/purple rupee on the first dig in Dampe's grave digging game, just like in rando\nIn a rando file, this is unconditionally enabled");
+                UIWidgets::PaddedEnhancementCheckbox("All Dogs are Richard", "gAllDogsRichard", true, false);
+                UIWidgets::Tooltip("All dogs can be traded in and will count as Richard.");
                 UIWidgets::Spacer(0);
 
                 if (ImGui::BeginMenu("Potion Values"))
@@ -897,6 +915,8 @@ void DrawEnhancementsMenu() {
                 UIWidgets::Tooltip("Disables bombs always rotating to face the camera. To be used in conjunction with mods that want to replace bombs with 3D objects.");
                 UIWidgets::PaddedEnhancementCheckbox("Disable Grotto Fixed Rotation", "gDisableGrottoRotation", true, false);
                 UIWidgets::Tooltip("Disables grottos rotating with the camera. To be used in conjunction with mods that want to replace grottos with 3D objects.");
+                UIWidgets::PaddedEnhancementCheckbox("Invisible Bunny Hood", "gHideBunnyHood", true, false);
+                UIWidgets::Tooltip("Turns Bunny Hood invisible while still maintaining its effects.");
 
                 ImGui::EndMenu();
             }
@@ -1036,8 +1056,13 @@ void DrawEnhancementsMenu() {
             UIWidgets::PaddedEnhancementCheckbox("Fix Poacher's Saw Softlock", "gFixSawSoftlock", true, false, CVarGetInteger("gSkipText", 0),
                 "This is disabled because it is forced on when Skip Text is enabled.", UIWidgets::CheckboxGraphics::Checkmark);
             UIWidgets::Tooltip("Prevents the Poacher's Saw softlock from mashing through the text, or with Skip Text enabled.");
+            UIWidgets::PaddedEnhancementCheckbox("Fix enemies not spawning near water", "gEnemySpawnsOverWaterboxes", true, false);
+            UIWidgets::Tooltip("Causes respawning enemies, like stalchildren, to appear on land near bodies of water. "
+                                "Fixes an incorrect calculation that acted like water underneath ground was above it.");
             UIWidgets::PaddedEnhancementCheckbox("Fix Bush Item Drops", "gBushDropFix", true, false);
             UIWidgets::Tooltip("Fixes the bushes to drop items correctly rather than spawning undefined items.");
+            UIWidgets::PaddedEnhancementCheckbox("Fix falling from vine edges", "gFixVineFall", true, false); 
+            UIWidgets::Tooltip("Prevents immediately falling off climbable surfaces if climbing on the edges."); 
 
             ImGui::EndMenu();
         }
@@ -1061,6 +1086,8 @@ void DrawEnhancementsMenu() {
             UIWidgets::PaddedEnhancementCheckbox("Restore old Gold Skulltula cutscene", "gGsCutscene", true, false);
             UIWidgets::PaddedEnhancementCheckbox("Quick Bongo Kill", "gQuickBongoKill", true, false);
             UIWidgets::Tooltip("Restore a bug from NTSC 1.0 that allows bypassing Bongo Bongo's intro cutscene to quickly kill him");
+            UIWidgets::PaddedEnhancementCheckbox("Original RBA Values", "gRestoreRBAValues", true, false);
+            UIWidgets::Tooltip("Restores the original outcomes when performing Reverse Bottle Adventure.");
 
             ImGui::EndMenu();
         }
@@ -1104,6 +1131,9 @@ void DrawEnhancementsMenu() {
                 "- Random (Seeded): Enemies are randomized based on the current randomizer seed/file\n"
             );
 
+            UIWidgets::PaddedEnhancementCheckbox("Randomized Enemy Sizes", "gRandomizedEnemySizes", true, false);
+            UIWidgets::Tooltip("Enemies and Bosses spawn with random sizes.");
+
             UIWidgets::PaddedEnhancementCheckbox("Ivan the Fairy (Coop Mode)", "gIvanCoopModeEnabled", true, false);
             UIWidgets::Tooltip("Enables Ivan the Fairy upon the next map change. Player 2 can control Ivan and "
                                 "press the C-Buttons to use items and mess with Player 1!");
@@ -1113,7 +1143,7 @@ void DrawEnhancementsMenu() {
 
             if (CVarGetInteger("gRupeeDash", 0)) {
                 UIWidgets::PaddedEnhancementSliderInt(
-                    "Rupee Dash Interval: %d", "##DashInterval", "gDashInterval", 3, 5, "", 5, true, true, false,
+                    "Rupee Dash Interval: %d", "##DashInterval", "gDashInterval", 1, 10, "", 5, true, true, false,
                     !CVarGetInteger("gRupeeDash", 0),
                     "This option is disabled because \"Rupee Dash Mode\" is turned off");
                 UIWidgets::Tooltip("Interval between Rupee reduction in Rupee Dash Mode");
@@ -1235,6 +1265,8 @@ void DrawCheatsMenu() {
         UIWidgets::Tooltip("Makes every tunic have the effects of every other tunic");
         UIWidgets::PaddedEnhancementCheckbox("Easy ISG", "gEzISG", true, false);
         UIWidgets::Tooltip("Passive Infinite Sword Glitch\nIt makes your sword's swing effect and hitbox stay active indefinitely");
+        UIWidgets::PaddedEnhancementCheckbox("Easy QPA", "gEzQPA", true, false);
+        UIWidgets::Tooltip("Gives you the glitched damage value of the quick put away glitch.");
         UIWidgets::PaddedEnhancementCheckbox("Timeless Equipment", "gTimelessEquipment", true, false);
         UIWidgets::Tooltip("Allows any item to be equipped, regardless of age\nAlso allows Child to use Adult strength upgrades");
         UIWidgets::PaddedEnhancementCheckbox("Easy Frame Advancing", "gCheatEasyPauseBufferEnabled", true, false);
@@ -1377,6 +1409,8 @@ void DrawDeveloperToolsMenu() {
         UIWidgets::EnhancementCheckbox("OoT Debug Mode", "gDebugEnabled");
         UIWidgets::Tooltip("Enables Debug Mode, allowing you to select maps with L + R + Z, noclip with L + D-pad Right, and open the debug menu with L on the pause screen");
         if (CVarGetInteger("gDebugEnabled", 0)) {
+            UIWidgets::EnhancementCheckbox("OoT Registry Editor", "gRegEditEnabled");
+            UIWidgets::Tooltip("Enables the registry editor");
             ImGui::Text("Debug Save File Mode:");
             UIWidgets::EnhancementCombobox("gDebugSaveFileMode", DebugSaveFileModes, 1);
             UIWidgets::Tooltip(

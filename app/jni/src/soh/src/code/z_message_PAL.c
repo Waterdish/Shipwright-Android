@@ -1136,16 +1136,26 @@ void Message_LoadItemIcon(PlayState* play, u16 itemId, s16 y) {
         R_TEXTBOX_ICON_XPOS = R_TEXT_INIT_XPOS - sIconItem32XOffsets[gSaveContext.language];
         R_TEXTBOX_ICON_YPOS = y + 6;
         R_TEXTBOX_ICON_SIZE = 32;
-        memcpy((void *)((uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE),
-               (void *)gItemIcons[itemId], strlen(gItemIcons[itemId]) + 1);
+#ifdef __ANDROID__ //This check is probably not necessary
+        memcpy((void *)(uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE,
+               gItemIcons[itemId], strlen(gItemIcons[itemId]) + 1);
+#else
+        memcpy((uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE,
+               gItemIcons[itemId], strlen(gItemIcons[itemId]) + 1);
+#endif
         // "Item 32-0"
         osSyncPrintf("アイテム32-0\n");
     } else {
         R_TEXTBOX_ICON_XPOS = R_TEXT_INIT_XPOS - sIconItem24XOffsets[gSaveContext.language];
         R_TEXTBOX_ICON_YPOS = y + 10;
         R_TEXTBOX_ICON_SIZE = 24;
-        memcpy((void *)((uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE),
+#ifdef __ANDROID__ //This check is probably not necessary
+        memcpy((void *)(uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE,
+               (void *)gItemIcons[itemId], strlen(gItemIcons[itemId]) + 1);
+#else
+        memcpy((uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE,
                gItemIcons[itemId], strlen(gItemIcons[itemId]) + 1);
+#endif
         // "Item 24"
         osSyncPrintf("アイテム24＝%d (%d) {%d}\n", itemId, itemId - ITEM_KOKIRI_EMERALD, 84);
     }
@@ -1531,8 +1541,13 @@ void Message_Decode(PlayState* play) {
             msgCtx->textboxBackgroundYOffsetIdx = (font->msgBuf[msgCtx->msgBufPos + 3] & 0xF0) >> 4;
             msgCtx->textboxBackgroundUnkArg = font->msgBuf[msgCtx->msgBufPos + 3] & 0xF;
 
-            memcpy((void *)(uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE, gRedMessageXLeftTex, strlen(gRedMessageXLeftTex) + 1);
-            memcpy((void *)(uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE + 0x900, gRedMessageXRightTex, strlen(gRedMessageXRightTex) + 1);
+#ifdef __ANDROID__ //This check is probably not necessary
+            memcpy((void *)(uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE, (void *)gRedMessageXLeftTex, strlen(gRedMessageXLeftTex) + 1);
+            memcpy((void *)(uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE + 0x900, (void *)gRedMessageXRightTex, strlen(gRedMessageXRightTex) + 1);
+#else
+            memcpy((uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE, gRedMessageXLeftTex, strlen(gRedMessageXLeftTex) + 1);
+            memcpy((uintptr_t)msgCtx->textboxSegment + MESSAGE_STATIC_TEX_SIZE + 0x900, gRedMessageXRightTex, strlen(gRedMessageXRightTex) + 1);
+#endif
 
             msgCtx->msgBufPos += 3;
             R_TEXTBOX_BG_YPOS = R_TEXTBOX_Y + 8;
@@ -1617,7 +1632,7 @@ void Message_OpenText(PlayState* play, u16 textId) {
         // Increments text id based on piece of heart count, assumes the piece of heart text is all
         // in order and that you don't have more than the intended amount of heart pieces.
         textId += (gSaveContext.inventory.questItems & 0xF0000000 & 0xF0000000) >> 0x1C;
-    } else if (!IS_RANDO && (msgCtx->textId == 0xC && CHECK_OWNED_EQUIP(EQUIP_SWORD, 2))) {
+    } else if (!IS_RANDO && (msgCtx->textId == 0xC && CHECK_OWNED_EQUIP(EQUIP_TYPE_SWORD, EQUIP_INV_SWORD_BIGGORON))) {
         textId = 0xB; // Traded Giant's Knife for Biggoron Sword
     } else if (!IS_RANDO && (msgCtx->textId == 0xB4 && (Flags_GetEventChkInf(EVENTCHKINF_SPOKE_TO_CURSED_MAN_IN_SKULL_HOUSE)))) {
         textId = 0xB5; // Destroyed Gold Skulltula

@@ -27,6 +27,10 @@
 #include <mutex>
 
 std::string otrFileName = "oot.otr";
+std::string customOtrFileName = "";
+std::string customAssetsPath = "";
+std::string portVersionString = "0.0.0";
+
 std::shared_ptr<LUS::Archive> otrArchive;
 BinaryWriter* fileWriter;
 std::chrono::steady_clock::time_point fileStart, resStart;
@@ -67,6 +71,37 @@ static void ExporterProgramEnd()
 {
 	uint32_t crc = 0xFFFFFFFF;
 	const uint8_t endianness = (uint8_t)Endianness::Big;
+
+	std::vector<uint16_t> portVersion = {};
+	std::vector<std::string> versionParts = StringHelper::Split(portVersionString, ".");
+
+	// If a major.minor.patch string was not passed in, fallback to 0 0 0 
+	if (versionParts.size() != 3) {
+		portVersion = { 0, 0, 0 };
+	} else {
+		// Parse version values to number
+		for (const auto& val : versionParts) {
+			uint16_t num = 0;
+			try {
+				num = (uint16_t)std::stoi(val, nullptr);
+			} catch (std::invalid_argument &e) {
+				num = 0;
+			} catch (std::out_of_range &e) {
+				num = 0;
+			}
+
+			portVersion.push_back(num);
+		}
+	}
+
+	MemoryStream *portVersionStream = new MemoryStream();
+	BinaryWriter portVerWriter(portVersionStream);
+	portVerWriter.SetEndianness(Endianness::Big);
+	portVerWriter.Write(endianness);
+	portVerWriter.Write(portVersion[0]); // Major
+	portVerWriter.Write(portVersion[1]); // Minor
+	portVerWriter.Write(portVersion[2]); // Patch
+	portVerWriter.Close();
 	
 	if (Globals::Instance->fileMode == ZFileMode::ExtractDirectory)
 	{
@@ -92,7 +127,11 @@ static void ExporterProgramEnd()
 		printf("Generating OTR Archive...\n");
 		otrArchive = LUS::Archive::CreateArchive(otrFileName, 40000);
 
+		printf("Adding game version file.\n");
 		otrArchive->AddFile("version", (uintptr_t)versionStream->ToVector().data(), versionStream->GetLength());
+
+		printf("Adding portVersion file.\n");
+		otrArchive->AddFile("portVersion", (uintptr_t)portVersionStream->ToVector().data(), portVersionStream->GetLength());
 
 		for (const auto& item : files)
 		{
@@ -110,17 +149,28 @@ static void ExporterProgramEnd()
 								fileData.size());
 		}
 	}
+
 	otrArchive = nullptr;
 	delete fileWriter;
 	files.clear();
 
-	// Add any additional files that need to be manually copied...
-	if (DiskFile::Exists("soh.otr")) {
+	// Generate custom otr file for extra assets
+	if (customAssetsPath == "" || customOtrFileName == "" || DiskFile::Exists(customOtrFileName)) {
+		printf("No Custom Assets path or otr file name provided, otr file already exists. Nothing to do.\n");
 		return;
 	}
-	const auto& lst = Directory::ListFiles("Extract");
-	std::shared_ptr<LUS::Archive> sohOtr = LUS::Archive::CreateArchive("soh.otr", 4096);
-	//sohOtr->AddFile("version", (uintptr_t)versionStream->ToVector().data(), versionStream->GetLength());
+
+	if (!customAssetsPath.ends_with("/")) {
+		customAssetsPath += "/";
+	}
+
+	const auto& lst = Directory::ListFiles(customAssetsPath);
+
+	printf("Generating Custom OTR Archive...\n");
+	std::shared_ptr<LUS::Archive> customOtr = LUS::Archive::CreateArchive(customOtrFileName, 4096);
+
+	printf("Adding portVersion file.\n");
+	customOtr->AddFile("portVersion", (uintptr_t)portVersionStream->ToVector().data(), portVersionStream->GetLength());
 
 	for (const auto& item : lst)
 	{
@@ -138,7 +188,7 @@ static void ExporterProgramEnd()
 				ZTexture tex(nullptr);
 				Globals::Instance->buildRawTexture = true;
 				tex.FromPNG(item, ZTexture::GetTextureTypeFromString(format));
-				printf("sohOtr->AddFile(%s)\n", StringHelper::Split(afterPath, "Extract/")[1].c_str());
+				printf("customOtr->AddFile(%s)\n", StringHelper::Split(afterPath, customAssetsPath)[1].c_str());
 
 				OTRExporter_Texture exporter;
 
@@ -151,7 +201,7 @@ static void ExporterProgramEnd()
 				writer.Write((char *)src.c_str(), src.size());
 
 				std::vector<char> fileData = stream->ToVector();
-				sohOtr->AddFile(StringHelper::Split(afterPath, "Extract/assets/")[1], (uintptr_t)fileData.data(), fileData.size());
+				customOtr->AddFile(StringHelper::Split(afterPath, customAssetsPath)[1], (uintptr_t)fileData.data(), fileData.size());
 				continue;
 			}
 		}
@@ -163,26 +213,35 @@ static void ExporterProgramEnd()
 			if (extension == "json")
 			{
 				const auto &fileData = DiskFile::ReadAllBytes(item);
-				printf("Adding accessibility texts %s\n", StringHelper::Split(item, "texts/")[1].c_str());
-				sohOtr->AddFile(StringHelper::Split(item, "Extract/assets/")[1], (uintptr_t)fileData.data(), fileData.size());
+				printf("Adding accessibility texts %s\n", StringHelper::Split(item, customAssetsPath)[1].c_str());
+				customOtr->AddFile(StringHelper::Split(item, customAssetsPath)[1], (uintptr_t)fileData.data(), fileData.size());
 			}
 			continue;
 		}
 
 		const auto& fileData = DiskFile::ReadAllBytes(item);
-		printf("sohOtr->AddFile(%s)\n", StringHelper::Split(item, "Extract/")[1].c_str());
-		sohOtr->AddFile(StringHelper::Split(item, item.find("Extract/assets/") != std::string::npos ? "Extract/assets/" : "Extract/")[1], (uintptr_t)fileData.data(), fileData.size());
+		printf("customOtr->AddFile(%s)\n", StringHelper::Split(item, customAssetsPath)[1].c_str());
+		customOtr->AddFile(StringHelper::Split(item, customAssetsPath)[1], (uintptr_t)fileData.data(), fileData.size());
 	}
-	sohOtr = nullptr;
+
+	customOtr = nullptr;
 }
 
 static void ExporterParseArgs(int argc, char* argv[], int& i)
 {
 	std::string arg = argv[i];
 
-	if (arg == "--otrfile")
-	{
+	if (arg == "--otrfile") {
 		otrFileName = argv[i + 1];
+		i++;
+	} else if (arg == "--customOtrFile") {
+		customOtrFileName = argv[i + 1];
+		i++;
+	} else if (arg == "--customAssetsPath") {
+		customAssetsPath = argv[i + 1];
+		i++;
+	} else if (arg == "--portVer") {
+		portVersionString = argv[i + 1];
 		i++;
 	}
 }

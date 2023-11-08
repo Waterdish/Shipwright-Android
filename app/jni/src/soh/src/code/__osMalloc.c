@@ -446,7 +446,11 @@ void __osFree_NoLock(Arena* arena, void* ptr) {
     //ArenaImpl_SetDebugInfo(node, NULL, 0, arena);
 
     if (arena->flag & FILL_FREEBLOCK) {
-        memset((void*)((uintptr_t)node + sizeof(ArenaNode)), BLOCK_FREE_MAGIC, node->size);
+#ifdef __ANDROID__ //This check is probably not necessary
+        memset((void *)(uintptr_t)node + sizeof(ArenaNode), BLOCK_FREE_MAGIC, node->size);
+#else
+        memset((uintptr_t)node + sizeof(ArenaNode), BLOCK_FREE_MAGIC, node->size);
+#endif
     }
 
     newNext = next;
@@ -458,7 +462,11 @@ void __osFree_NoLock(Arena* arena, void* ptr) {
 
         node->size += next->size + sizeof(ArenaNode);
         if (arena->flag & FILL_FREEBLOCK) {
+#ifdef __ANDROID__ //This check is probably not necessary
+            memset((void *)next, BLOCK_FREE_MAGIC, sizeof(ArenaNode));
+#else
             memset(next, BLOCK_FREE_MAGIC, sizeof(ArenaNode));
+#endif
         }
         node->next = newNext;
         next = newNext;
@@ -517,7 +525,11 @@ void __osFree_NoLockDebug(Arena* arena, void* ptr, const char* file, s32 line) {
     //ArenaImpl_SetDebugInfo(node, file, line, arena);
 
     if (arena->flag & FILL_FREEBLOCK) {
-        memset((void*)((uintptr_t)node + sizeof(ArenaNode)), BLOCK_FREE_MAGIC, node->size);
+#ifdef __ANDROID__ //This check is probably not necessary
+        memset((void *)(uintptr_t)node + sizeof(ArenaNode), BLOCK_FREE_MAGIC, node->size);
+#else
+        memset((uintptr_t)node + sizeof(ArenaNode), BLOCK_FREE_MAGIC, node->size);
+#endif
     }
 
     newNext = node->next;

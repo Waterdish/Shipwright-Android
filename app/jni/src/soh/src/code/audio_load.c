@@ -1005,7 +1005,11 @@ s32 AudioLoad_Dma(OSIoMesg* mesg, u32 priority, s32 direction, uintptr_t devAddr
         return -1;
     }
 
-    memcpy((void*)ramAddr, (void*)devAddr, size);
+#ifdef __ANDROID__ //This check is probably not necessary
+    memcpy((void *)ramAddr, (void*) devAddr, size);
+#else
+    memcpy(ramAddr, devAddr, size);
+#endif
 
     return 0;
 }

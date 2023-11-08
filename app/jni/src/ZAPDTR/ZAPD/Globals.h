@@ -68,7 +68,7 @@ public:
 	bool forceUnaccountedStatic = false;
 	bool otrMode = true;
 	bool buildRawTexture = false;
-	bool onlyGenSohOtr = false;
+	bool onlyGenCustomOtr = false;
 
 	ZRom* rom = nullptr;
 	std::vector<ZFile*> files;

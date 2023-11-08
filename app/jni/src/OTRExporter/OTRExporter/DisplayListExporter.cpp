@@ -8,6 +8,7 @@
 #include <libultraship/libultra/gbi.h>
 #include <Globals.h>
 #include <iostream>
+#include <regex>
 #include <string>
 #include "MtxExporter.h"
 #include <Utils/DiskFile.h>
@@ -883,13 +884,19 @@ std::string OTRExporter_DisplayList::GetPrefix(ZResource* res)
 	std::string xmlPath = StringHelper::Replace(res->parent->GetXmlFilePath().string(), "\\", "/");
 
 	if (StringHelper::Contains(oName, "_scene") || StringHelper::Contains(oName, "_room")) {
-		prefix = "scenes";
-        if (Globals::Instance->rom->IsMQ()) {
-            prefix += "/mq";
-        } else {
-            prefix += "/nonmq";
-        }
-    }
+		prefix = "scenes/shared";
+
+		// Regex for xml paths that are dungeons with unique MQ variants (only the main dungeon, not boss rooms)
+		std::regex dungeonsWithMQ(R"(((ydan)|(ddan)|(bdan)|(Bmori1)|(HIDAN)|(MIZUsin)|(jyasinzou)|(HAKAdan)|(HAKAdanCH)|(ice_doukutu)|(men)|(ganontika))\.xml)");
+
+		if (StringHelper::Contains(xmlPath, "dungeons/") && std::regex_search(xmlPath, dungeonsWithMQ)) {
+			if (Globals::Instance->rom->IsMQ()) {
+				prefix = "scenes/mq";
+			} else {
+				prefix = "scenes/nonmq";
+			}
+		}
+	}
 	else if (StringHelper::Contains(xmlPath, "objects/"))
 		prefix = "objects";
 	else if (StringHelper::Contains(xmlPath, "textures/"))

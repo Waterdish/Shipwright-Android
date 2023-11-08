@@ -50,7 +50,7 @@ static std::array<const char* const, 14> crashEasterEgg = {
 	"\tOh! MY GOD!!",
 };
 
-#if false//HAS_POSIX == 1
+#if HAS_POSIX == 1 && !defined(__ANDROID__)
 void ErrorHandler(int sig)
 {
 	std::array<void*, 4096> arr;
@@ -193,13 +193,13 @@ LONG seh_filter(_EXCEPTION_POINTERS* ex)
 
 void CrashHandler_Init()
 {
-#if false//HAS_POSIX == 1
+#if HAS_POSIX == 1 && !defined(__ANDROID__)
 	signal(SIGSEGV, ErrorHandler);
 	signal(SIGABRT, ErrorHandler);
 #elif defined(_MSC_VER)
 	SetUnhandledExceptionFilter(seh_filter);
-#else
-	//HANDLE_WARNING(WarningType::Always,
-	//               "tried to set error handler, but this ZAPD build lacks support for one", "");
+#elif !defined(__ANDROID__)
+	HANDLE_WARNING(WarningType::Always,
+	               "tried to set error handler, but this ZAPD build lacks support for one", "");
 #endif
 }

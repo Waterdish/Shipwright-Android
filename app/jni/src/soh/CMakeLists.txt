@@ -263,13 +263,11 @@ set(ALL_FILES
 ################################################################################
 # Target
 ################################################################################
-add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
-
-#find_library(OpenGLES2_LIBRARY GLESv2 REQUIRED)
-#target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../glad/include)
-#target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../gl4es/include)
-#target_link_libraries(${PROJECT_NAME} PRIVATE GL)
-#target_link_libraries(${PROJECT_NAME} PRIVATE GLAD)
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
+    add_executable(${PROJECT_NAME} ${ALL_FILES})
+else()
+    add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
+endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
@@ -354,29 +352,12 @@ else()
     message("Boost found in " ${Boost_INCLUDE_DIRS})
     set(BOOST-INCLUDE ${Boost_INCLUDE_DIRS})
 endif()
-
-################################################################################
-# Find/download SDL2 for Android
-################################################################################
-#if (CMAKE_SYSTEM_NAME STREQUAL "Android")
-#    find_package(SDL2 QUIET)
-#    if (NOT ${SDL2_FOUND})
-#        FetchContent_Declare(
-#            SDL2
-#	    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-#	    GIT_TAG release-2.28.1 
-#    	)
-#        message("SDL2 not found. Downloading now...")
-#        FetchContent_MakeAvailable(SDL2)
-#        message("SDL2 downloaded to " ${FETCHCONTENT_BASE_DIR}/sdl2-src)
-#    endif()
-#endif()
-
-
 ################################################################################
 # Compile definitions
 ################################################################################
-#find_package(SDL2)
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
+find_package(SDL2)
+endif()
 set(SDL2-INCLUDE ${SDL2_INCLUDE_DIRS})
 
 if (BUILD_CROWD_CONTROL)
@@ -635,6 +616,29 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
                 -Wno-stringop-overflow
             >
         )
+    elseif (CMAKE_SYSTEM_NAME STREQUAL "Android")
+        target_compile_options(${PROJECT_NAME} PRIVATE
+            -O2
+            
+            -Wno-error
+            -Wno-format-security
+            # disable some warnings to not clutter output
+            -Wno-multichar
+            -Wno-return-type
+            -Wno-narrowing
+            -Wno-switch-outside-range
+            $<$<COMPILE_LANGUAGE:C>:
+                -Werror-implicit-function-declaration
+                -Wno-incompatible-pointer-types
+                -Wno-discarded-array-qualifiers
+                -Wno-discarded-qualifiers
+                -Wno-int-conversion
+                -Wno-builtin-declaration-mismatch
+                -Wno-switch-unreachable
+                -Wno-stringop-overflow
+                -Wno-implicit-int
+            >
+        )
     else()
         if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
 		set(CPU_OPTION -msse2 -mfpmath=sse)
@@ -652,14 +656,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
             $<$<COMPILE_LANGUAGE:C>:
                 -Werror-implicit-function-declaration
                 -Wno-incompatible-pointer-types
-                -Wno-discarded-array-qualifiers
-                -Wno-discarded-qualifiers
-                -Wno-int-conversion
-                -Wno-builtin-declaration-mismatch
-                -Wno-switch-unreachable
-                -Wno-stringop-overflow
-                -Wno-implicit-int
-                -Wno-return-type
             >
             $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>
             $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-enum-enum-conversion>
@@ -744,8 +740,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 			"setupapi"
 		)
 	endif()
-elseif(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch|Android")
-    #find_package(SDL2)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
+    find_package(SDL2)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
@@ -753,6 +749,16 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch|Android")
         "ZAPDUtils;"
         SDL2::SDL2
         -lglad
+        Threads::Threads
+    )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    set(ADDITIONAL_LIBRARY_DEPENDENCIES
+        "libultraship;"
+        "ZAPDUtils;"
+        "ZAPDLib;"
+        SDL2::SDL2
         Threads::Threads
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
@@ -767,7 +773,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
         ${DEVKITPRO}/portlibs/wiiu/include/
     )
 else()
-    #find_package(SDL2)
+    find_package(SDL2)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
  	set(ADDITIONAL_LIBRARY_DEPENDENCIES
@@ -787,6 +793,11 @@ endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 INSTALL(FILES $<TARGET_PDB_FILE:soh> DESTINATION ./debug COMPONENT ship)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/soh/soh.otr DESTINATION . COMPONENT ship)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/../scripts/linux/appimage/soh.sh.in ${CMAKE_BINARY_DIR}/linux/soh.sh @ONLY)
 endif()
 
 find_program(CURL NAMES curl DOC "Path to the curl program.  Used to download files.")
@@ -794,6 +805,7 @@ execute_process(COMMAND ${CURL} -sSfL https://raw.githubusercontent.com/gabomdq/
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/macosx/Info.plist.in ${CMAKE_BINARY_DIR}/macosx/Info.plist @ONLY)
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/macosx/soh-macos.sh.in ${CMAKE_BINARY_DIR}/macosx/soh-macos.sh @ONLY)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/gamecontrollerdb.txt DESTINATION ../MacOS COMPONENT ship)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/soh/soh.otr DESTINATION ../Resources COMPONENT ship)
 elseif(NOT "${CMAKE_SYSTEM_NAME}" MATCHES "NintendoSwitch|CafeOS")

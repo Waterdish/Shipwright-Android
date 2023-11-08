@@ -888,7 +888,11 @@ void AnimationContext_SetLoadFrame(PlayState* play, LinkAnimationHeader* animati
 
         s16* animData = ResourceMgr_LoadPlayerAnimByName(animPath);
 
-        memcpy((void*)ram, (void *)((uintptr_t)animData + (((sizeof(Vec3s) * limbCount + 2) * frame))), sizeof(Vec3s) * limbCount + 2);
+#ifdef __ANDROID__ //This check is probably not necessary
+        memcpy((void *)ram, (void *)(uintptr_t)animData + (((sizeof(Vec3s) * limbCount + 2) * frame)), sizeof(Vec3s) * limbCount + 2);
+#else
+        memcpy(ram, (uintptr_t)animData + (((sizeof(Vec3s) * limbCount + 2) * frame)), sizeof(Vec3s) * limbCount + 2);
+#endif
 
         /*u32* ramPtr = (u32*)ram;
 

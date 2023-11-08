@@ -2,7 +2,9 @@
 package com.dishii.soh;
 import org.libsdl.app.SDLActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,11 +31,45 @@ public class MainActivity extends SDLActivity{
 
         // Check if storage permissions are granted
         if (hasStoragePermission()) {
+            doVersionCheck();
             setupFiles();
         } else {
             requestStoragePermission();
         }
     }
+
+    private void doVersionCheck(){
+        SharedPreferences preferences = getSharedPreferences("com.dishii.soh.prefs",Context.MODE_PRIVATE);
+        int currentVersion = BuildConfig.VERSION_CODE; // Use your app's version code
+        int storedVersion = preferences.getInt("appVersion", 1);
+
+        if (currentVersion > storedVersion) {
+            deleteOutdatedAssets();
+            preferences.edit().putInt("appVersion", currentVersion).apply();
+        }
+    }
+
+    private void deleteOutdatedAssets(){
+        File externalSohFile = new File(getExternalFilesDir(null), "soh.otr");
+        externalSohFile.delete();
+        File externalOotFile = new File(getExternalFilesDir(null), "oot.otr");
+        externalOotFile.delete();
+        File externalOotMqFile = new File(getExternalFilesDir(null), "oot-mq.otr");
+        externalOotMqFile.delete();
+        File externalAssetsFolder = new File(getExternalFilesDir(null), "assets");
+        deleteRecursive(externalAssetsFolder);
+
+    }
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursive(child);
+            }
+        }
+        fileOrDirectory.delete();
+    }
+
 
 
     // Check if storage permission is granted
@@ -66,6 +102,7 @@ public class MainActivity extends SDLActivity{
     }
 
     private void setupFiles(){
+        //Copy assets folder for rom extraction
         File externalAssetsDir = new File(getExternalFilesDir(null), "assets");
         if (!externalAssetsDir.exists()) {
             try {
@@ -76,6 +113,11 @@ public class MainActivity extends SDLActivity{
             }
         }
 
+        //Create empty mods folder
+        File externalModsDir = new File(getExternalFilesDir(null), "mods");
+        externalModsDir.mkdirs();
+
+        //Copy soh.otr
         File externalSohOtrFile = new File(getExternalFilesDir(null), "soh.otr");
         if (!externalSohOtrFile.exists()) {
             try {
