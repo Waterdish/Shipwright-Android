@@ -333,10 +333,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	set(CMAKE_FIND_FRAMEWORK LAST)
 endif()
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-	set(CMAKE_FIND_FRAMEWORK LAST)
-endif()
-
 if (NOT CMAKE_SYSTEM_NAME STREQUAL "Android")
     find_package(PNG REQUIRED)
 endif()
