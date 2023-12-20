@@ -10101,7 +10101,8 @@ void func_80847BA0(PlayState* play, Player* this) {
 
         D_808535F0 = func_80041DB8(&play->colCtx, this->actor.wallPoly, this->actor.wallBgId);
 
-        if (CVarGetInteger("gFixVineFall", 0)) {
+        // conflicts arise from these two being enabled at once, and with ClimbEverything on, FixVineFall is redundant anyway
+        if (CVarGetInteger("gFixVineFall", 0) && !CVarGetInteger("gClimbEverything", 0)) {
             /* This fixes the "started climbing a wall and then immediately fell off" bug.
             * The main idea is if a climbing wall is detected, double-check that it will
             * still be valid once climbing begins by doing a second raycast with a small
@@ -10628,7 +10629,14 @@ void Player_UseTunicBoots(Player* this, PlayState* play) {
     s32 i;
     s32 item;
     s32 actionParam;
-    if (!(this->stateFlags1 & PLAYER_STATE1_INPUT_DISABLED || this->stateFlags1 & PLAYER_STATE1_IN_ITEM_CS || this->stateFlags1 & PLAYER_STATE1_IN_CUTSCENE || this->stateFlags1 & PLAYER_STATE1_TEXT_ON_SCREEN || this->stateFlags2 & PLAYER_STATE2_OCARINA_PLAYING)) {
+    if (!(
+        this->stateFlags1 & PLAYER_STATE1_INPUT_DISABLED || 
+        this->stateFlags1 & PLAYER_STATE1_IN_ITEM_CS || 
+        this->stateFlags1 & PLAYER_STATE1_IN_CUTSCENE || 
+        this->stateFlags1 & PLAYER_STATE1_TEXT_ON_SCREEN || 
+        this->stateFlags1 & PLAYER_STATE1_DEAD || 
+        this->stateFlags2 & PLAYER_STATE2_OCARINA_PLAYING
+    )) {
         for (i = 0; i < ARRAY_COUNT(D_80854388); i++) {
             if (CHECK_BTN_ALL(sControlInput->press.button, D_80854388[i])) {
                 break;
