@@ -17,12 +17,18 @@ Tested On: Android 10 and Android 13 <br>
 5. It will launch straight into the game on subsequent plays. (If you would like to get the rom selection dialog back, delete the .otr files in Android/data/com.dishii.soh/files/) <br>
 <br>
   
-Use Back/Select/- controller button to open Enhancements menu. Use touch controls to navigate menus. <br>
+Use Back/Select/- controller button, or the Android back button (swipe left if using gesture controls) to open Enhancements menu. Use touch controls to navigate menus. <br>
 
 
 <h3>FAQ:</h3>
 Q: Why is it immediately crashing? <br>
   A: Try deleting and re-extracting the OTR file (oot.otr). <br> <br>
+
+Q: The game opened once, but now it's just a black screen.
+  A: Reinstall and change MSAA to 1 in Settings->Graphics
+
+Q: My controller is not doing anything.
+  A: Close the Enhancements Menu. If the Enhancements Menu is not open, open it with the Android back button and check if it is detected in Controller->Controller Mapping. If it is, press refresh.
 
 Q: Why are these changes not in the main Shipwright repository?<br>
   A: Working on it.<br> <br>
