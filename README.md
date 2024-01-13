@@ -24,11 +24,11 @@ Use Back/Select/- controller button, or the Android back button (swipe left if u
 Q: Why is it immediately crashing? <br>
   A: Try deleting and re-extracting the OTR file (oot.otr). <br> <br>
 
-Q: The game opened once, but now it's just a black screen.
-  A: Reinstall and change MSAA to 1 in Settings->Graphics
+Q: The game opened once, but now it's just a black screen. <br>
+  A: Reinstall and change MSAA to 1 in Settings->Graphics <br><br>
 
-Q: My controller is not doing anything.
-  A: Close the Enhancements Menu. If the Enhancements Menu is not open, open it with the Android back button and check if it is detected in Controller->Controller Mapping. If it is, press refresh.
+Q: My controller is not doing anything. <br>
+  A: Close the Enhancements Menu. If the Enhancements Menu is not open, open it with the Android back button and check if it is detected in Controller->Controller Mapping. If it is, press refresh. <br><br>
 
 Q: Why are these changes not in the main Shipwright repository?<br>
   A: Working on it.<br> <br>
