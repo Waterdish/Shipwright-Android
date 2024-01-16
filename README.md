@@ -41,7 +41,7 @@ Orientation Lock does not work. https://github.com/libsdl-org/SDL/issues/6090<br
 Near-plane clipping with first-person items like the slingshot.<br>
 
 <h3>Build Instructions:</h3>
-1.Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
-2.Open the project in android studio and build.<br>
+1. Edit the app/build.gradle file to point to your ndk folder. NDK 26+ tested as working.<br>
+2. Open the project in android studio and build.<br>
 
 
