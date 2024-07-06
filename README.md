@@ -27,8 +27,11 @@ Q: Why is it immediately crashing? <br>
 Q: The game opened once, but now it's just a black screen. <br>
   A: Reinstall and change MSAA to 1 in Settings->Graphics <br><br>
 
-Q: I can't map the C buttons. <br>
+Q: I can't map the C buttons because the window is cut off. <br>
   A: Go to Settings->Graphics->ImGui Menu Scale and change it from X-Large to a smaller value. <br><br>
+
+Q: Some buttons on my controller won't map. <br>
+  A: Unfortunately the only option for now is to use a different controller. Some controllers have issues with this app. <br><br>
 
 Q: My controller is not doing anything. <br>
   A: Close the Enhancements Menu. If the Enhancements Menu is not open, open it with the Android back button and check if it is detected in Settings->Controller->Controller Mapping. If it is, press refresh. <br><br>
