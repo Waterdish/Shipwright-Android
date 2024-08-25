@@ -28,7 +28,6 @@
 #include "Enhancements/randomizer/randomizer_item_tracker.h"
 #include "Enhancements/randomizer/randomizer_settings_window.h"
 
-extern bool ToggleAltAssetsAtEndOfFrame;
 extern bool isBetaQuestEnabled;
 
 extern "C" PlayState* gPlayState;
@@ -50,6 +49,13 @@ std::string GetWindowButtonText(const char* text, bool menuOpen) {
     if (!menuOpen) { strcat(buttonText, "  "); }
     return buttonText;
 }
+            
+static std::unordered_map<LUS::WindowBackend, const char*> windowBackendNames = {
+    { LUS::WindowBackend::DX11, "DirectX" },
+    { LUS::WindowBackend::SDL_OPENGL, "OpenGL"},
+    { LUS::WindowBackend::SDL_METAL, "Metal" },
+    { LUS::WindowBackend::GX2, "GX2"}
+};
 
 static const char* imguiScaleOptions[4] = { "Small", "Normal", "Large", "X-Large" };
 
@@ -101,6 +107,24 @@ static const char* imguiScaleOptions[4] = { "Small", "Normal", "Large", "X-Large
 extern "C" SaveContext gSaveContext;
 
 namespace SohGui {
+
+std::unordered_map<LUS::WindowBackend, const char*> availableWindowBackendsMap;
+LUS::WindowBackend configWindowBackend;
+
+void UpdateWindowBackendObjects() {
+    LUS::WindowBackend runningWindowBackend = LUS::Context::GetInstance()->GetWindow()->GetWindowBackend();
+    int32_t configWindowBackendId = LUS::Context::GetInstance()->GetConfig()->GetInt("Window.Backend.Id", -1);
+    if (configWindowBackendId != -1 && configWindowBackendId < static_cast<int>(LUS::WindowBackend::BACKEND_COUNT)) {
+        configWindowBackend = static_cast<LUS::WindowBackend>(configWindowBackendId);
+    } else {
+        configWindowBackend = runningWindowBackend;
+    }
+
+    auto availableWindowBackends = LUS::Context::GetInstance()->GetWindow()->GetAvailableWindowBackends();
+    for (auto& backend : *availableWindowBackends) {
+        availableWindowBackendsMap[backend] = windowBackendNames[backend];
+    }
+}
 
 void DrawMenuBarIcon() {
     static bool gameIconLoaded = false;
@@ -395,40 +419,24 @@ void DrawSettingsMenu() {
             UIWidgets::Tooltip("Changes the scaling of the ImGui menu elements.");
 
             UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
-            
-            static std::unordered_map<LUS::WindowBackend, const char*> windowBackendNames = {
-                { LUS::WindowBackend::DX11, "DirectX" },
-                { LUS::WindowBackend::SDL_OPENGL, "OpenGL"},
-                { LUS::WindowBackend::SDL_METAL, "Metal" },
-                { LUS::WindowBackend::GX2, "GX2"}
-            };
 
             ImGui::Text("Renderer API (Needs reload)");
-            LUS::WindowBackend runningWindowBackend = LUS::Context::GetInstance()->GetWindow()->GetWindowBackend();
-            LUS::WindowBackend configWindowBackend;
-            int configWindowBackendId = LUS::Context::GetInstance()->GetConfig()->GetInt("Window.Backend.Id", -1);
-            if (configWindowBackendId != -1 && configWindowBackendId < static_cast<int>(LUS::WindowBackend::BACKEND_COUNT)) {
-                configWindowBackend = static_cast<LUS::WindowBackend>(configWindowBackendId);
-            } else {
-                configWindowBackend = runningWindowBackend;
-            }
 
-            if (LUS::Context::GetInstance()->GetWindow()->GetAvailableWindowBackends()->size() <= 1) {
+            if (availableWindowBackendsMap.size() <= 1) {
                 UIWidgets::DisableComponent(ImGui::GetStyle().Alpha * 0.5f);
             }
-            if (ImGui::BeginCombo("##RApi", windowBackendNames[configWindowBackend])) {
-                for (size_t i = 0; i < LUS::Context::GetInstance()->GetWindow()->GetAvailableWindowBackends()->size(); i++) {
-                    auto backend = LUS::Context::GetInstance()->GetWindow()->GetAvailableWindowBackends()->data()[i];
-                    if (ImGui::Selectable(windowBackendNames[backend], backend == configWindowBackend)) {
-                        LUS::Context::GetInstance()->GetConfig()->SetInt("Window.Backend.Id", static_cast<int>(backend));
-                        LUS::Context::GetInstance()->GetConfig()->SetString("Window.Backend.Name",
-                                                                            windowBackendNames[backend]);
+            if (ImGui::BeginCombo("##RApi", availableWindowBackendsMap[configWindowBackend])) {
+                for (auto backend : availableWindowBackendsMap) {
+                    if (ImGui::Selectable(backend.second, backend.first == configWindowBackend)) {
+                        LUS::Context::GetInstance()->GetConfig()->SetInt("Window.Backend.Id", static_cast<int>(backend.first));
+                        LUS::Context::GetInstance()->GetConfig()->SetString("Window.Backend.Name", backend.second);
                         LUS::Context::GetInstance()->GetConfig()->Save();
+                        UpdateWindowBackendObjects();
                     }
                 }
                 ImGui::EndCombo();
             }
-            if (LUS::Context::GetInstance()->GetWindow()->GetAvailableWindowBackends()->size() <= 1) {
+            if (availableWindowBackendsMap.size() <= 1) {
                 UIWidgets::ReEnableComponent("");
             }
 
@@ -911,12 +919,7 @@ void DrawEnhancementsMenu() {
         if (ImGui::BeginMenu("Graphics"))
         {
             if (ImGui::BeginMenu("Mods")) {
-                if (UIWidgets::PaddedEnhancementCheckbox("Use Alternate Assets", "gAltAssets", false, false)) {
-                    // The checkbox will flip the alt asset CVar, but we instead want it to change at the end of the game frame
-                    // We toggle it back while setting the flag to update the CVar later
-                    CVarSetInteger("gAltAssets", !CVarGetInteger("gAltAssets", 0));
-                    ToggleAltAssetsAtEndOfFrame = true;
-                }
+                UIWidgets::PaddedEnhancementCheckbox("Use Alternate Assets", "gAltAssets", false, false);
                 UIWidgets::Tooltip("Toggle between standard assets and alternate assets. Usually mods will indicate if this setting has to be used or not.");
                 UIWidgets::PaddedEnhancementCheckbox("Disable Bomb Billboarding", "gDisableBombBillboarding", true, false);
                 UIWidgets::Tooltip("Disables bombs always rotating to face the camera. To be used in conjunction with mods that want to replace bombs with 3D objects.");
@@ -929,16 +932,39 @@ void DrawEnhancementsMenu() {
             }
             UIWidgets::PaddedEnhancementCheckbox("Disable LOD", "gDisableLOD", true, false);
             UIWidgets::Tooltip("Turns off the Level of Detail setting, making models use their higher-poly variants at any distance");
-            if (UIWidgets::PaddedEnhancementCheckbox("Disable Draw Distance", "gDisableDrawDistance", true, false)) {
-                if (CVarGetInteger("gDisableDrawDistance", 0) == 0) {
+            if (UIWidgets::EnhancementSliderInt("Increase Actor Draw Distance: %dx", "##IncreaseActorDrawDistance",
+                                                "gDisableDrawDistance", 1, 5, "", 1, true, false)) {
+                if (CVarGetInteger("gDisableDrawDistance", 1) <= 1) {
                     CVarSetInteger("gDisableKokiriDrawDistance", 0);
                 }
             }
-            UIWidgets::Tooltip("Turns off the objects draw distance, making objects being visible from a longer range");
-            if (CVarGetInteger("gDisableDrawDistance", 0) == 1) {
+            UIWidgets::Tooltip("Increases the range in which actors/objects are drawn");
+            if (CVarGetInteger("gDisableDrawDistance", 1) > 1) {
                 UIWidgets::PaddedEnhancementCheckbox("Kokiri Draw Distance", "gDisableKokiriDrawDistance", true, false);
-                UIWidgets::Tooltip("The Kokiri are mystical beings that fade into view when approached\nEnabling this will remove their draw distance");
+                UIWidgets::Tooltip("The Kokiri are mystical beings that fade into view when approached\nEnabling this "
+                                   "will remove their draw distance");
             }
+            UIWidgets::PaddedEnhancementCheckbox("Widescreen Actor Culling", "gEnhancements.WidescreenActorCulling",
+                                                 true, false);
+            UIWidgets::Tooltip("Adjusts the horizontal culling plane to account for widescreen resolutions");
+            UIWidgets::PaddedEnhancementCheckbox(
+                "Cull Glitch Useful Actors", "gEnhancements.ExtendedCullingExcludeGlitchActors", true, false,
+                !CVarGetInteger("gEnhancements.WidescreenActorCulling", 0) &&
+                    CVarGetInteger("gDisableDrawDistance", 1) <= 1,
+                "Requires Actor Draw Distance to be increased or Widescreen Actor Culling enabled");
+            UIWidgets::Tooltip(
+                "Exclude actors that are useful for glitches from the extended culling ranges.\n"
+                "Some actors may still draw in the extended ranges, but will not \"update\" so that certain "
+                "glitches that leverage the original culling requirements will still work.\n"
+                "\n"
+                "The following actors are excluded:\n"
+                "- White clothed Gerudos\n"
+                "- King Zora\n"
+                "- Gossip Stones\n"
+                "- Boulders\n"
+                "- Blue Warps\n"
+                "- Darunia\n"
+                "- Gold Skulltulas");
             UIWidgets::PaddedEnhancementCheckbox("N64 Mode", "gLowResMode", true, false);
             UIWidgets::Tooltip("Sets aspect ratio to 4:3 and lowers resolution to 240p, the N64's native resolution");
             UIWidgets::PaddedEnhancementCheckbox("Glitch line-up tick", "gDrawLineupTick", true, false);
@@ -1612,6 +1638,10 @@ void DrawRandomizerMenu() {
 
         ImGui::EndMenu();
     }
+}
+
+void SohMenuBar::InitElement() {
+    UpdateWindowBackendObjects();
 }
 
 void SohMenuBar::DrawElement() {

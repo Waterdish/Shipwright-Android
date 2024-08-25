@@ -174,15 +174,18 @@ static void ExporterProgramEnd()
 
 	for (const auto& item : lst)
 	{
-		std::vector<std::string> splitPath = StringHelper::Split(item, ".");
+		size_t filenameSepAt = item.find_last_of("/\\");
+		const std::string filename = item.substr(filenameSepAt + 1);
 
-		if (splitPath.size() >= 3)
+		if (std::count(filename.begin(), filename.end(), '.') >= 2)
 		{
-			const std::string extension = splitPath.at(splitPath.size() - 1);
-			const std::string format = splitPath.at(splitPath.size() - 2);
-			splitPath.pop_back();
-			splitPath.pop_back();
-			std::string afterPath = std::accumulate(splitPath.begin(), splitPath.end(), std::string(""));
+			size_t extensionSepAt = filename.find_last_of(".");
+			size_t formatSepAt = filename.find_last_of(".", extensionSepAt - 1);
+
+			const std::string extension = filename.substr(extensionSepAt + 1);
+			const std::string format = filename.substr(formatSepAt + 1, extensionSepAt - formatSepAt - 1);
+			std::string afterPath = item.substr(0, filenameSepAt + formatSepAt + 1);
+
 			if (extension == "png" && (format == "rgba32" || format == "rgb5a1" || format == "i4" || format == "i8" || format == "ia4" || format == "ia8" || format == "ia16" || format == "ci4" || format == "ci8"))
 			{
 				ZTexture tex(nullptr);
@@ -208,8 +211,7 @@ static void ExporterProgramEnd()
 
 		if (item.find("accessibility") != std::string::npos)
 		{
-			std::string extension = splitPath.at(splitPath.size() - 1);
-			splitPath.pop_back();
+			std::string extension = filename.substr(filename.find_last_of(".") + 1);
 			if (extension == "json")
 			{
 				const auto &fileData = DiskFile::ReadAllBytes(item);

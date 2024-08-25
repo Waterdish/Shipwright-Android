@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
 
-project(Ship VERSION 8.0.5 LANGUAGES C CXX)
-set(PROJECT_BUILD_NAME "MacReady Foxtrot" CACHE STRING "")
-set(PROJECT_TEAM "github.com/harbourmasters" CACHE STRING "")
+project(Ship VERSION 8.0.6 LANGUAGES C CXX)
+set(PROJECT_BUILD_NAME "MacReady Golf" CACHE STRING "" FORCE)
+set(PROJECT_TEAM "github.com/harbourmasters" CACHE STRING "" FORCE)
 
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT soh)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
@@ -116,6 +116,16 @@ install(FILES "${CMAKE_SOURCE_DIR}/OTRExporter/CFG/ActorList_OoTMqDbg.txt" DESTI
 install(FILES "${CMAKE_SOURCE_DIR}/OTRExporter/CFG/ObjectList_OoTMqDbg.txt" DESTINATION ./assets/extractor/symbols COMPONENT ship)
 install(FILES "${CMAKE_SOURCE_DIR}/OTRExporter/CFG/SymbolMap_OoTMqDbg.txt" DESTINATION ./assets/extractor/symbols COMPONENT ship)
 endif()
+
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+file(COPY "${CMAKE_SOURCE_DIR}/src/soh/assets/extractor/" DESTINATION "${CMAKE_SOURCE_DIR}/../src/main/assets/assets/extractor")
+file(COPY "${CMAKE_SOURCE_DIR}/src/soh/assets/xml/" DESTINATION "${CMAKE_SOURCE_DIR}/../src/main/assets/assets/extractor/xmls")
+file(COPY "${CMAKE_SOURCE_DIR}/src/OTRExporter/CFG/filelists/" DESTINATION "${CMAKE_SOURCE_DIR}/../src/main/assets/assets/extractor/filelists")
+file(COPY "${CMAKE_SOURCE_DIR}/src/OTRExporter/CFG/ActorList_OoTMqDbg.txt" DESTINATION "${CMAKE_SOURCE_DIR}/../src/main/assets/assets/extractor/symbols")
+file(COPY "${CMAKE_SOURCE_DIR}/src/OTRExporter/CFG/ObjectList_OoTMqDbg.txt" DESTINATION "${CMAKE_SOURCE_DIR}/../src/main/assets/assets/extractor/symbols")
+file(COPY "${CMAKE_SOURCE_DIR}/src/OTRExporter/CFG/SymbolMap_OoTMqDbg.txt" DESTINATION "${CMAKE_SOURCE_DIR}/../src/main/assets/assets/extractor/symbols")
+endif()
+
 
 find_package(Python3 COMPONENTS Interpreter)
 
