@@ -17,7 +17,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 31
         versionCode 6
-        versionName "1.2.2"
+        versionName "1.3.0"
         externalNativeBuild {
             //ndkBuild {
             //    arguments "APP_PLATFORM=android-23"
@@ -75,7 +75,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.core:core:1.7.0' // Use the latest version
-
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
 
 task wrapper(type: Wrapper) {
