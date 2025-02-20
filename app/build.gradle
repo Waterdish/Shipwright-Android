@@ -1,4 +1,4 @@
-def buildAsLibrary = project.hasProperty('BUILD_AS_LIBRARY');
+def buildAsLibrary = project.hasProperty('BUILD_AS_LIBRARY')
 def buildAsApplication = !buildAsLibrary
 if (buildAsApplication) {
     apply plugin: 'com.android.application'
@@ -8,25 +8,21 @@ else {
 }
 
 android {
-    ndkPath "/home/waterdish/Android/Sdk/ndk/26.0.10792818"  // Point to your own NDK
-    compileSdkVersion 31
+    ndkVersion '27.2.12479018'
+    compileSdkVersion 34
     defaultConfig {
         if (buildAsApplication) {
             applicationId "com.dishii.soh"
         }
-        minSdkVersion 18
-        targetSdkVersion 31
+        minSdkVersion 21
+        //noinspection OldTargetApi
+        targetSdkVersion 34
         versionCode 6
         versionName "1.3.0"
         externalNativeBuild {
-            //ndkBuild {
-            //    arguments "APP_PLATFORM=android-23"
-            //    abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-            //}
             cmake {
-                 arguments "-DANDROID_APP_PLATFORM=android-23", "-DANDROID_STL=c++_static", "-DHAVE_LD_VERSION_SCRIPT=OFF",'-DUSE_OPENGLES=ON'
+                 arguments "-DANDROID_APPNAME=${applicationId}", "-DANDROID_APP_PLATFORM=android-21", "-DANDROID_STL=c++_static", "-DHAVE_LD_VERSION_SCRIPT=OFF", "-DUSE_OPENGLES=ON", "-DCMAKE_BUILD_TYPE=$elfBuildType"
                  abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-                 //abiFilters 'arm64-v8a'
             }
         }
     }
@@ -36,7 +32,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    applicationVariants.all { variant ->
+    buildFeatures {
+        buildConfig = true
+    }
+    namespace 'com.dishii.soh'
+    lint {
+        abortOnError false
+    }
+    applicationVariants.configureEach { variant ->
         tasks["merge${variant.name.capitalize()}Assets"]
             .dependsOn("externalNativeBuild${variant.name.capitalize()}")
     }
@@ -45,27 +48,21 @@ android {
             jniLibs.srcDir 'libs'
         }
         externalNativeBuild {
-            //ndkBuild {
-            //    path 'jni/Android.mk'
-            //}
             cmake {
                  path 'jni/CMakeLists.txt'
-                 version "3.25.1"
+                 version "3.31.5"
             }
         }
        
     }
-    lintOptions {
-        abortOnError false
-    }
-    
+
     if (buildAsLibrary) {
         libraryVariants.all { variant ->
             variant.outputs.each { output ->
                 def outputFile = output.outputFile
                 if (outputFile != null && outputFile.name.endsWith(".aar")) {
-                    def fileName = "org.libsdl.app.aar";
-                    output.outputFile = new File(outputFile.parent, fileName);
+                    def fileName = "com.dishii.soh.aar"
+                    output.outputFile = new File(outputFile.parent, fileName)
                 }
             }
         }
@@ -74,13 +71,13 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.core:core:1.7.0' // Use the latest version
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '7.3'
+tasks.register('wrapper', Wrapper) {
+    gradleVersion = '8.10.2'
 }
 
-task prepareKotlinBuildScriptModel {
+tasks.register('prepareKotlinBuildScriptModel') {
 }
