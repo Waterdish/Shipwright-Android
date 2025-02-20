@@ -6,18 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import android.Manifest;
 import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import android.provider.Settings;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -25,29 +18,49 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 //This class is the main SDLActivity and just sets up a bunch of default files
-public class MainActivity extends SDLActivity{
+public class MainActivity extends SDLActivity {
 
-    private static final int STORAGE_PERMISSION_REQUEST_CODE = 1;
+    private static final int FILE_HANDLER_REQUEST_CODE = 0;
+    private static final int SPECIAL_STORAGE_PERMISSION_REQUEST_CODE = 1;
 
     SharedPreferences preferences;
+
+    private boolean hasSpecialExternalStoragePermission = false;
+
+    private boolean permissionPopupIsOpen = false;
+
+    // this is a case where I feel like it is actually clearer to have a double negative boolean,
+    // than to have one named "permissionPopupChargeIsAvailable = true", but you can let me know
+    // if you would prefer to reorganize this.
+    private boolean permissionPopupWasDeclined = false;
+
+    private boolean hasInstalledExternalAssetFiles = false;
+
+    @Override
+    protected String[] getLibraries() {
+        return new String[] {
+            "SDL2",
+            "soh"
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        preferences = getSharedPreferences("com.dishii.soh.prefs",Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("com.dishii.soh.prefs", Context.MODE_PRIVATE);
+
+        doVersionCheck();
 
         setupControllerOverlay();
-        // Check if storage permissions are granted
-        if (hasStoragePermission()) {
-            doVersionCheck();
-            setupFiles();
-        } else {
-            requestStoragePermission();
-        }
         attachController();
     }
 
@@ -56,99 +69,108 @@ public class MainActivity extends SDLActivity{
         int storedVersion = preferences.getInt("appVersion", 1);
 
         if (currentVersion > storedVersion) {
-            deleteOutdatedAssets();
+            // I tend to just copy all assets on every app launch, overwriting the old ones,
+            // so that I don't have to change appVersion every time I need to make sure that the newest assets
+            // are guaranteed to always be present. Also, when /storage/emulated/0/com.dishii.soh is used, the assets
+            // could be from a whole different version of the app and that wouldn't be detected (at least by this
+            // particular SharedPreferences), so my way always overwrites those.
+            // My way is also very slow to load at every startup, which is ok for
+            // apps that have only a few external assets, but for apps like this one that have
+            // a lot of external assets, the slowness is pretty severe. Let me know if that is not desirable
+            // and you would prefer it to work differently.
+            //deleteOutdatedAssets();
             preferences.edit().putInt("appVersion", currentVersion).apply();
         }
     }
 
-    private void deleteOutdatedAssets(){
-        File externalSohFile = new File(getExternalFilesDir(null), "soh.otr");
-        externalSohFile.delete();
-        File externalOotFile = new File(getExternalFilesDir(null), "oot.otr");
-        externalOotFile.delete();
-        File externalOotMqFile = new File(getExternalFilesDir(null), "oot-mq.otr");
-        externalOotMqFile.delete();
-        File externalAssetsFolder = new File(getExternalFilesDir(null), "assets");
-        deleteRecursive(externalAssetsFolder);
+    // called from native code through JNI where necessary
+    public String getExternalAssetsPath() {
+        // the original location, /storage/emulated/0/Android/data/com.dishii.soh/files,
+        // can be the fallback if the user denies the permission
+        String externalAssetsPath = getExternalFilesDir(null).getAbsolutePath();
 
-    }
+        if (!permissionPopupWasDeclined) {
+            requestSpecialExternalStoragePermission();
+        }
 
-    private void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory()) {
-            for (File child : fileOrDirectory.listFiles()) {
-                deleteRecursive(child);
+        while(permissionPopupIsOpen) {
+            // Do nothing until a permission is chosen
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                // do nothing
             }
         }
-        fileOrDirectory.delete();
+
+        if (hasSpecialExternalStoragePermission) {
+            // /storage/emulated/0/com.dishii.soh, also mounted at /sdcard/com.dishii.soh
+            externalAssetsPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getApplicationContext().getPackageName();
+        }
+
+        if (!hasInstalledExternalAssetFiles) {
+            setupFiles(externalAssetsPath);
+        }
+
+        return externalAssetsPath;
     }
 
+    // Request the special external storage permission
+    private void requestSpecialExternalStoragePermission() {
+        // Android 5 or older
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            hasSpecialExternalStoragePermission = true;
+            return;
+        }
 
+        // Android 10 or older
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            if (checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) {
+                hasSpecialExternalStoragePermission = true;
+                return;
+            }
 
-    // Check if storage permission is granted
-    private boolean hasStoragePermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED;
-    }
+            requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"}, SPECIAL_STORAGE_PERMISSION_REQUEST_CODE);
+            permissionPopupIsOpen = true;
+            return;
+        }
 
-    // Request storage permission
-    private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                STORAGE_PERMISSION_REQUEST_CODE);
+        // Android 11 or newer
+        if (Environment.isExternalStorageManager()) {
+            hasSpecialExternalStoragePermission = true;
+            return;
+        }
+
+        try {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.addCategory("android.intent.category.DEFAULT");
+            intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+            startActivityForResult(intent, SPECIAL_STORAGE_PERMISSION_REQUEST_CODE);
+        } catch (Exception e) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            startActivityForResult(intent, SPECIAL_STORAGE_PERMISSION_REQUEST_CODE);
+        }
+
+        permissionPopupIsOpen = true;
     }
 
     // Handle permission request result
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_REQUEST_CODE) {
+        if (requestCode == SPECIAL_STORAGE_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setupFiles();
+                hasSpecialExternalStoragePermission = true;
             } else {
-                // Permission denied, handle accordingly (e.g., show a message)
+                permissionPopupWasDeclined = true;
             }
+            permissionPopupIsOpen = false;
         }
     }
 
-    private void setupFiles(){
-        //Copy assets folder for rom extraction
-        File externalAssetsDir = new File(getExternalFilesDir(null), "assets");
-        if (!externalAssetsDir.exists()) {
-            try {
-                externalAssetsDir.mkdirs();
-                AssetCopyUtil.copyAssetsToExternal(this, "assets", externalAssetsDir.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Create empty mods folder
-        File externalModsDir = new File(getExternalFilesDir(null), "mods");
-        externalModsDir.mkdirs();
-
-        //Copy soh.otr
-        File externalSohOtrFile = new File(getExternalFilesDir(null), "soh.otr");
-        if (!externalSohOtrFile.exists()) {
-            try {
-                InputStream in = getAssets().open("soh.otr");
-                OutputStream out = new FileOutputStream(externalSohOtrFile);
-
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-
-                in.close();
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    private void setupFiles(String externalAssetsPath) {
+        AssetCopyUtil.copyAssetsToExternal(this, externalAssetsPath);
+        hasInstalledExternalAssetFiles = true;
     }
 
     private native void nativeHandleSelectedFile(String filePath);
@@ -156,10 +178,11 @@ public class MainActivity extends SDLActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
+
+        if (requestCode == FILE_HANDLER_REQUEST_CODE && resultCode == RESULT_OK) {
             Uri selectedFileUri = data.getData();
             String fileName = "ZELOOTD.z64";
-            File destinationDirectory = getExternalFilesDir(null); // The second argument can specify a subdirectory, or you can pass null to use the root directory.
+            String destinationDirectory = getExternalAssetsPath();
             File destinationFile = new File(destinationDirectory, fileName);
 
             if (destinationDirectory != null) {
@@ -181,8 +204,20 @@ public class MainActivity extends SDLActivity{
             }
             nativeHandleSelectedFile(destinationFile.getPath());
         }
+
+        if (requestCode == SPECIAL_STORAGE_PERMISSION_REQUEST_CODE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R /* Android 11 or newer */) {
+                if (Environment.isExternalStorageManager()) {
+                    hasSpecialExternalStoragePermission = true;
+                } else {
+                    permissionPopupWasDeclined = true;
+                }
+            }
+            permissionPopupIsOpen = false;
+        }
     }
 
+    // called from native code through JNI where necessary
     public void openFilePicker() {
         // Create an Intent to open the file picker dialog
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -191,14 +226,6 @@ public class MainActivity extends SDLActivity{
         // Start the file picker dialog
         startActivityForResult(intent, 0);
     }
-
-    // Check if external storage is available and writable
-    private boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-
 
     public native void attachController();
     public native void detachController();
