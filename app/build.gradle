@@ -8,7 +8,7 @@ else {
 }
 
 android {
-    ndkPath "/home/waterdish/Android/Sdk/ndk/26.0.10792818"  // Point to your own NDK
+    ndkVersion "26.0.10792818"
     compileSdkVersion 31
     defaultConfig {
         if (buildAsApplication) {
@@ -50,15 +50,13 @@ android {
             //}
             cmake {
                  path 'jni/CMakeLists.txt'
-                 version "3.25.1"
+                 version "3.31.5"
             }
         }
-       
     }
     lintOptions {
         abortOnError false
     }
-    
     if (buildAsLibrary) {
         libraryVariants.all { variant ->
             variant.outputs.each { output ->
