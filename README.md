@@ -57,7 +57,7 @@ A: Working on it.
 
 ## Build
 
-**Build Tools:**
+### Build Tools
 
 - [Ubuntu Noble Numbat | 24.04.2 LTS](https://releases.ubuntu.com/noble/)
 - [CMake 3.25.1](https://github.com/Kitware/CMake/releases)
@@ -71,7 +71,61 @@ A: Working on it.
 
 **Note:** These are the tools and versions that has been tested and are supported to build the project directly. If you want to use different tools/versions, note that you would need to figure out by yourself how to setup and configure the tools/project to build with them.
 
-**Build Instructions:**
+### Build Instructions
 
-1. Edit the *app/build.gradle* file to point to your ndk folder. *NDK 26+* tested as working.
-2. Open the project in android studio and build.
+1. Use a Linux base OS system (Windows build support seems to be unsupported. For Windows users, you can use WSL or a full VM).
+
+2. Download and Install CMake:
+
+    ```bash
+    cd ~
+    wget -O cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-x86_64.tar.gz
+    tar -xvzf cmake.tar.gz && rm -f cmake.tar.gz
+    sudo mv cmake* /opt/cmake_3_25_1
+    echo "export PATH=/opt/cmake_3_25_1/bin:\$PATH" | sudo tee /etc/profile.d/cmake.sh
+    sudo chmod +x /etc/profile.d/cmake.sh
+    source /etc/profile.d/cmake.sh
+    ```
+
+3. Download and install OpenJDK:
+
+    ```bash
+    cd ~
+    wget -O openjdk.tar.gz https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz
+    tar -xvzf openjdk.tar.gz && rm -f openjdk.tar.gz
+    sudo mv jdk* /opt/jdk_17
+    sudo rm -f /etc/profile.d/jdk.sh
+    echo "export JAVA_HOME=/opt/jdk_17" | sudo tee /etc/profile.d/jdk.sh
+    echo "export PATH=/opt/jdk_17/bin:\$PATH" | sudo tee -a /etc/profile.d/jdk.sh
+    sudo chmod +x /etc/profile.d/jdk.sh
+    source /etc/profile.d/jdk.sh
+    ```
+
+4. Download and install Android Studio:
+
+    ```bash
+    cd ~
+    wget -O android-studio.tar.gz https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.13/android-studio-2024.1.1.13-linux.tar.gz
+    tar -xvzf android-studio.tar.gz && rm -f android-studio.tar.gz
+    sudo mv android-studio /opt/android-studio
+    sudo rm -f /usr/local/bin/android-studio
+    sudo ln -s /opt/android-studio/bin/studio.sh /usr/local/bin/android-studio
+    ```
+
+5. Execute Android Studio:
+
+    ```bash
+    android-studio
+    ```
+
+6. Go to "Tools/SDK Manager" and install the next tools:
+
+    - Android SDK 31 | Android 12
+    - Android SDK Build-Tools 30.0.2
+    - Android NDK 26.0.10792818
+    - Android SDK Command-Line Tools 17.0
+    - Android SDK Platform-Tools 35.0.2
+
+7. Edit the *app/build.gradle* file to point to your ndk folder.
+
+8. Sync and Build the Project.
