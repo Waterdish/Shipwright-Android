@@ -55,7 +55,23 @@ A: Working on it.
 - [Orientation Lock does not work.](https://github.com/libsdl-org/SDL/issues/6090)
 - Near-plane clipping when the camera is close to walls.
 
-## Build Instructions
+## Build
+
+**Build Tools:**
+
+- [Ubuntu Noble Numbat | 24.04.2 LTS](https://releases.ubuntu.com/noble/)
+- [CMake 3.25.1](https://github.com/Kitware/CMake/releases)
+- [OpenJDK 17 | Java Development Kit](https://jdk.java.net/archive/)
+- [Android Studio Koala | 2024.1.1 Patch 2 August 8, 2024](https://developer.android.com/studio/archive)
+- Android SDK 31 | Android 12
+- Android SDK Build-Tools 30.0.2
+- Android SDK Command-Line Tools 17.0
+- Android NDK 26.0.10792818
+- Android Gradle Plugin (AGP) 7.0.3
+
+**Note:** These are the tools and versions that has been tested and are supported to build the project directly. If you want to use different tools/versions, note that you would need to figure out by yourself how to setup and configure the tools/project to build with them.
+
+**Build Instructions:**
 
 1. Edit the *app/build.gradle* file to point to your ndk folder. *NDK 26+* tested as working.
 2. Open the project in android studio and build.
