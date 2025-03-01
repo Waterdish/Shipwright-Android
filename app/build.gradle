@@ -50,15 +50,13 @@ android {
             //}
             cmake {
                  path 'jni/CMakeLists.txt'
-                 version "3.25.1"
+                 version "3.31.5"
             }
         }
-       
     }
     lintOptions {
         abortOnError false
     }
-    
     if (buildAsLibrary) {
         libraryVariants.all { variant ->
             variant.outputs.each { output ->

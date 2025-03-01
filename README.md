@@ -60,7 +60,7 @@ A: Working on it.
 ### Build Tools
 
 - [Ubuntu Noble Numbat | 24.04.2 LTS](https://releases.ubuntu.com/noble/)
-- [CMake 3.25.1](https://github.com/Kitware/CMake/releases)
+- [CMake 3.31.5](https://github.com/Kitware/CMake/releases)
 - [OpenJDK 17 | Java Development Kit](https://jdk.java.net/archive/)
 - [Android Studio Koala | 2024.1.1 Patch 2 August 8, 2024](https://developer.android.com/studio/archive)
 - Android SDK 31 | Android 12
@@ -75,19 +75,7 @@ A: Working on it.
 
 1. Use a Linux base OS system (Windows build support seems to be unsupported. For Windows users, you can use WSL or a full VM).
 
-2. Download and Install CMake:
-
-    ```bash
-    cd ~
-    wget -O cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-x86_64.tar.gz
-    tar -xvzf cmake.tar.gz && rm -f cmake.tar.gz
-    sudo mv cmake* /opt/cmake_3_25_1
-    echo "export PATH=/opt/cmake_3_25_1/bin:\$PATH" | sudo tee /etc/profile.d/cmake.sh
-    sudo chmod +x /etc/profile.d/cmake.sh
-    source /etc/profile.d/cmake.sh
-    ```
-
-3. Download and install OpenJDK:
+2. Download and install OpenJDK:
 
     ```bash
     cd ~
@@ -101,7 +89,7 @@ A: Working on it.
     source /etc/profile.d/jdk.sh
     ```
 
-4. Download and install Android Studio:
+3. Download and install Android Studio:
 
     ```bash
     cd ~
@@ -112,20 +100,21 @@ A: Working on it.
     sudo ln -s /opt/android-studio/bin/studio.sh /usr/local/bin/android-studio
     ```
 
-5. Execute Android Studio:
+4. Execute Android Studio:
 
     ```bash
     android-studio
     ```
 
-6. Go to "Tools/SDK Manager" and install the next tools:
+5. Go to "Tools/SDK Manager" and install the next tools:
 
     - Android SDK 31 | Android 12
     - Android SDK Build-Tools 30.0.2
     - Android NDK 26.0.10792818
     - Android SDK Command-Line Tools 17.0
     - Android SDK Platform-Tools 35.0.2
+    - CMake 3.31.5
 
-7. Edit the *app/build.gradle* file to point to your ndk folder.
+6. Edit the *app/build.gradle* file to point to your ndk folder.
 
-8. Sync and Build the Project.
+7. Sync and Build the Project.
