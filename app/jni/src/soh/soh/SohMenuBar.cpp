@@ -28,6 +28,10 @@
 #include "Enhancements/randomizer/randomizer_item_tracker.h"
 #include "Enhancements/randomizer/randomizer_settings_window.h"
 
+#if defined(__ANDROID__)
+#include "port/android/AndroidImpl.h"
+#endif
+
 extern bool isBetaQuestEnabled;
 
 extern "C" PlayState* gPlayState;
@@ -190,6 +194,13 @@ void DrawShipMenu() {
 
         if (ImGui::MenuItem("Quit")) {
             LUS::Context::GetInstance()->GetWindow()->Close();
+        }
+#endif
+
+#if defined(__ANDROID__)
+        if (ImGui::MenuItem("Quit")) {
+            LUS::Context::GetInstance()->GetWindow()->Close();
+            LUS::Android::Exit();
         }
 #endif
         ImGui::EndMenu();
