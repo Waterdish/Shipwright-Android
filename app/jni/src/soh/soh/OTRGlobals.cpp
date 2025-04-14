@@ -952,6 +952,8 @@ extern "C" void InitOTR() {
     LUS::Switch::Init(LUS::PreInitPhase);
 #elif defined(__WIIU__)
     LUS::WiiU::Init(appShortName);
+#elif defined(__ANDROID__)
+    LUS::Android::Init();
 #endif
 
 #ifdef _WIN32
