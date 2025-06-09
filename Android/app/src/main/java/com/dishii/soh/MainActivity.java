@@ -126,8 +126,9 @@ public class MainActivity extends SDLActivity{
     private void setupFiles() {
         // Target folder in root of storage
         File targetRootFolder = new File(Environment.getExternalStorageDirectory(), "SOH");
-
         File sourceRootFolder = getExternalFilesDir(null);
+
+        boolean isFirstSetup = false;
 
         if (!targetRootFolder.exists()) {
             boolean created = targetRootFolder.mkdirs();
@@ -136,9 +137,10 @@ public class MainActivity extends SDLActivity{
                 return;
             }
 
+            isFirstSetup = true;
+
             // Show popup
             Toast.makeText(this, "Setting up files in /storage/emulated/0/SOH...", Toast.LENGTH_SHORT).show();
-
             Log.i("setupFiles", "Created SOH, checking for existing files...");
 
             // Check if anything is present in the Android/data folder
@@ -177,34 +179,43 @@ public class MainActivity extends SDLActivity{
                 File targetModsDir = new File(targetRootFolder, "mods");
                 targetModsDir.mkdirs();
 
-                // --- Copy soh.otr from APK assets ---
-                File targetOtrFile = new File(targetRootFolder, "soh.otr");
-
-                if (!targetOtrFile.exists()) {
-                    try {
-                        InputStream in = getAssets().open("soh.otr");
-                        OutputStream out = new FileOutputStream(targetOtrFile);
-
-                        byte[] buffer = new byte[1024];
-                        int read;
-                        while ((read = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, read);
-                        }
-
-                        in.close();
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
                 Toast.makeText(this, "Assets copied to SOH", Toast.LENGTH_SHORT).show();
             }
-
         } else {
-            Log.i("setupFiles", "Target folder already exists. No action needed.");
+            Log.i("setupFiles", "Target folder already exists.");
+        }
+
+        // --- Always check if soh.otr exists and copy it if not ---
+        File targetOtrFile = new File(targetRootFolder, "soh.otr");
+        if (!targetOtrFile.exists()) {
+            Log.i("setupFiles", "soh.otr not found. Copying from APK...");
+            try {
+                InputStream in = getAssets().open("soh.otr");
+                OutputStream out = new FileOutputStream(targetOtrFile);
+
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+
+                in.close();
+                out.close();
+
+                Toast.makeText(this, "soh.otr copied to SOH", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error copying soh.otr.", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            if (isFirstSetup) {
+                Log.i("setupFiles", "soh.otr already copied during first setup.");
+            } else {
+                Log.i("setupFiles", "soh.otr already exists. No action needed.");
+            }
         }
     }
+
 
     private native void nativeHandleSelectedFile(String filePath);
 

@@ -1,12 +1,12 @@
 #include <libultraship/libultra.h>
 
-const char gBuildVersion[] = "Blair Bravo (9.0.1)";
+const char gBuildVersion[] = "Blair Charlie (9.0.2)";
 const u16 gBuildVersionMajor = 9;
 const u16 gBuildVersionMinor = 0;
-const u16 gBuildVersionPatch = 1;
+const u16 gBuildVersionPatch = 2;
 
 const char gGitBranch[] = "main";
-const char gGitCommitHash[] = "55aaa64";
+const char gGitCommitHash[] = "749a9e7";
 const char gGitCommitTag[] = "";
 
 const char gBuildTeam[] = "github.com/harbourmasters";
