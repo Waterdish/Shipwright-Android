@@ -37,6 +37,24 @@ s32 Camera_UpdateWater(Camera* camera);
 
 #include "z_camera_data.inc"
 
+#ifdef __ANDROID__
+#include "jni.h"
+
+float touchCameraYaw=0;
+float touchCameraPitch=0;
+
+extern void JNICALL Java_com_dishii_soh_MainActivity_setCameraState(JNIEnv *env, jobject jobj, jint axis, jfloat value) {
+    switch(axis){
+        case 0:
+            touchCameraYaw=value;
+            break;
+        case 1:
+            touchCameraPitch=value;
+            break;
+    }
+}
+#endif
+
 /*===============================================================*/
 
 /**
@@ -1421,6 +1439,11 @@ s32 SetCameraManual(Camera* camera) {
     f32 newCamX = -D_8015BD7C->state.input[0].cur.right_stick_x * 10.0f;
     f32 newCamY = D_8015BD7C->state.input[0].cur.right_stick_y * 10.0f;
 
+#ifdef __ANDROID__
+    newCamX += -touchCameraYaw*10.0f;
+    newCamY += touchCameraPitch*10.0f;
+#endif
+
     Mouse_HandleThirdPerson(&newCamX, &newCamY);
 
     if ((fabsf(newCamX) >= 15.0f || fabsf(newCamY) >= 15.0f) && camera->play->manualCamera == false) {
@@ -1488,6 +1511,11 @@ s32 Camera_Free(Camera* camera) {
 
     f32 newCamX = -D_8015BD7C->state.input[0].cur.right_stick_x * 10.0f;
     f32 newCamY = +D_8015BD7C->state.input[0].cur.right_stick_y * 10.0f;
+
+#ifdef __ANDROID__
+    newCamX += -touchCameraYaw*10.0f;
+    newCamY += touchCameraPitch*10.0f;
+#endif
 
     /* Disable mouse movement when holding down the shield */
     if (!(camera->player->stateFlags1 & 0x400000)) {
