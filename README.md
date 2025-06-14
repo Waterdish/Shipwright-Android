@@ -26,9 +26,13 @@ Use *Back/Select/-* controller button to open **Enhancements menu**. Use touch c
 
 ## FAQ
 
+**Q: How to add mods?**
+
+A: "SOH" folder at root of device storage.
+
 **Q: Why is it immediately crashing?**
 
-A: Try deleting and re-extracting the OTR file (oot.otr).
+A: Try deleting the "SOH" folder and having it set up the files again. Be patient at the black screens.
 
 **Q: The game opened once, but now it's just a black screen.**
 
