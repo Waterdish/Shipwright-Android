@@ -60,34 +60,27 @@ public class AssetCopyUtil {
         }
     }
 
-    public static void copyFile(File sourceFile, File targetFile) throws IOException {
-        InputStream in = new FileInputStream(sourceFile);
-        OutputStream out = new FileOutputStream(targetFile);
-
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        while ((bytesRead = in.read(buffer)) != -1) {
-            out.write(buffer, 0, bytesRead);
-        }
-
-        in.close();
-        out.close();
-    }
-
     public static void copyDirectory(File sourceDir, File targetDir) throws IOException {
         if (!targetDir.exists()) {
             targetDir.mkdirs();
         }
-
-        File[] files = sourceDir.listFiles();
-        if (files == null) return;
-
-        for (File file : files) {
-            File targetFile = new File(targetDir, file.getName());
+        for (File file : sourceDir.listFiles()) {
+            File dest = new File(targetDir, file.getName());
             if (file.isDirectory()) {
-                copyDirectory(file, targetFile);
+                copyDirectory(file, dest);
             } else {
-                copyFile(file, targetFile);
+                copyFile(file, dest);
+            }
+        }
+    }
+
+    public static void copyFile(File source, File dest) throws IOException {
+        try (InputStream in = new FileInputStream(source);
+             OutputStream out = new FileOutputStream(dest)) {
+            byte[] buf = new byte[64*1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
             }
         }
     }

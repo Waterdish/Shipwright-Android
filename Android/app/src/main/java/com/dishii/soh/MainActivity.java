@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.util.concurrent.CountDownLatch;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
@@ -31,27 +33,40 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.concurrent.Executors;
+import android.app.AlertDialog;
+
 //This class is the main SDLActivity and just sets up a bunch of default files
 public class MainActivity extends SDLActivity{
 
     SharedPreferences preferences;
+    private static final CountDownLatch setupLatch = new CountDownLatch(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         preferences = getSharedPreferences("com.dishii.soh.prefs",Context.MODE_PRIVATE);
 
-        setupControllerOverlay();
-
         // Check if storage permissions are granted
         if (hasStoragePermission()) {
-            setupFiles();
             doVersionCheck();
+            checkAndSetupFiles();
         } else {
             requestStoragePermission();
         }
+
+        super.onCreate(savedInstanceState);
+
+        setupControllerOverlay();
         attachController();
+    }
+
+    public static void waitForSetupFromNative() {
+        try {
+            setupLatch.await();  // Block until setup is complete
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void doVersionCheck(){
@@ -64,22 +79,48 @@ public class MainActivity extends SDLActivity{
         }
     }
 
-    private void deleteOutdatedAssets(){
-        File externalSohFile = new File(getExternalFilesDir(null), "soh.otr");
-        externalSohFile.delete();
-        File externalOotFile = new File(getExternalFilesDir(null), "oot.otr");
-        externalOotFile.delete();
-        File externalOotMqFile = new File(getExternalFilesDir(null), "oot-mq.otr");
-        externalOotMqFile.delete();
-        File externalAssetsFolder = new File(getExternalFilesDir(null), "assets");
-        deleteRecursive(externalAssetsFolder);
+    private void deleteOutdatedAssets() {
+        File targetRootFolder = new File(Environment.getExternalStorageDirectory(), "SOH");
 
+        File sohFile = new File(targetRootFolder, "soh.otr");
+        File ootFile = new File(targetRootFolder, "oot.otr");
+        File ootMqFile = new File(targetRootFolder, "oot-mq.otr");
+        File assetsFolder = new File(targetRootFolder, "assets");
+
+        deleteIfExists(sohFile);
+        deleteIfExists(ootFile);
+        deleteIfExists(ootMqFile);
+        deleteRecursiveIfExists(assetsFolder);
+    }
+
+    private void deleteIfExists(File file) {
+        if (file.exists()) {
+            if (file.delete()) {
+                Log.i("deleteAssets", "Deleted file: " + file.getAbsolutePath());
+            } else {
+                Log.w("deleteAssets", "Failed to delete file: " + file.getAbsolutePath());
+            }
+        } else {
+            Log.i("deleteAssets", "File not found (skipped): " + file.getAbsolutePath());
+        }
+    }
+
+    private void deleteRecursiveIfExists(File dir) {
+        if (dir.exists()) {
+            deleteRecursive(dir);
+            Log.i("deleteAssets", "Deleted directory: " + dir.getAbsolutePath());
+        } else {
+            Log.i("deleteAssets", "Directory not found (skipped): " + dir.getAbsolutePath());
+        }
     }
 
     private void deleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory()) {
-            for (File child : fileOrDirectory.listFiles()) {
-                deleteRecursive(child);
+            File[] children = fileOrDirectory.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteRecursive(child);
+                }
             }
         }
         fileOrDirectory.delete();
@@ -107,7 +148,7 @@ public class MainActivity extends SDLActivity{
                 startActivityForResult(intent, STORAGE_PERMISSION_REQUEST_CODE);
             } else {
                 // Already granted
-                setupFiles();
+                checkAndSetupFiles();
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android 6–10 → request READ/WRITE at runtime
@@ -119,102 +160,122 @@ public class MainActivity extends SDLActivity{
                     STORAGE_PERMISSION_REQUEST_CODE);
         } else {
             // Below Android 6 → permissions granted at install time
-            setupFiles();
+            checkAndSetupFiles();
         }
     }
 
-    private void setupFiles() {
-        // Target folder in root of storage
+    public void checkAndSetupFiles() {
         File targetRootFolder = new File(Environment.getExternalStorageDirectory(), "SOH");
-        File sourceRootFolder = getExternalFilesDir(null);
+        File assetsFolder = new File(targetRootFolder, "assets");
+        File sohOtrFile = new File(targetRootFolder, "soh.otr");
 
-        boolean isFirstSetup = false;
+        boolean isMissingAssets = !assetsFolder.exists() || assetsFolder.listFiles() == null || assetsFolder.listFiles().length == 0;
+        boolean isMissingSohOtr = !sohOtrFile.exists();
 
-        if (!targetRootFolder.exists()) {
-            boolean created = targetRootFolder.mkdirs();
-            if (!created) {
-                Log.e("setupFiles", "Failed to create external storage folder SOH");
-                return;
-            }
+        if (!targetRootFolder.exists() || isMissingAssets || isMissingSohOtr) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Setup Required")
+                    .setMessage("Some required files are missing. The app will create them (~30s). Press OK to begin.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        Executors.newSingleThreadExecutor().execute(() -> {
+                            runOnUiThread(() -> Toast.makeText(this, "Setting up files...", Toast.LENGTH_SHORT).show());
+                            setupFilesInBackground(targetRootFolder);
+                        });
+                    })
+                    .show();
+        } else {
+            // No setup needed, still need to count down
+            setupLatch.countDown();
+        }
+    }
 
-            isFirstSetup = true;
 
-            // Show popup
-            Toast.makeText(this, "Setting up files in /storage/emulated/0/SOH...", Toast.LENGTH_SHORT).show();
-            Log.i("setupFiles", "Created SOH, checking for existing files...");
+    private void setupFilesInBackground(File targetRootFolder) {
 
-            // Check if anything is present in the Android/data folder
-            boolean sourceHasFiles = false;
-            if (sourceRootFolder != null && sourceRootFolder.exists()) {
-                File[] sourceFiles = sourceRootFolder.listFiles();
-                if (sourceFiles != null && sourceFiles.length > 0) {
-                    sourceHasFiles = true;
-                }
-            }
+        File sourceOldRoot = getExternalFilesDir(null);
+        File sourceSavesDir = new File(sourceOldRoot, "Save"); // how to tell if there's anything to migrate
 
-            if (sourceHasFiles) {
-                Log.i("setupFiles", "Copying files from Android/data/.../files to SOH");
-                try {
-                    AssetCopyUtil.copyDirectory(sourceRootFolder, targetRootFolder);
-                    Toast.makeText(this, "Files copied from Android/data to SOH", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Error copying files.", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Log.i("setupFiles", "Android/data/.../files is empty. Copying assets and OTR from APK to SOH");
+        // === Migration from old Android/data/.../files/ directory ===
+        if (sourceOldRoot != null && sourceSavesDir.isDirectory()) {
+            Log.i("setupFiles", "Migrating old data from: " + sourceOldRoot.getAbsolutePath());
 
-                // --- Copy assets folder from APK assets to target ---
-                File targetAssetsDir = new File(targetRootFolder, "assets");
-                if (!targetAssetsDir.exists()) {
+            File[] sourceFiles = sourceOldRoot.listFiles();
+            if (sourceFiles != null) {
+                for (File file : sourceFiles) {
+                    String name = file.getName();
+                    if (name.equals("assets") || name.equals("soh.otr") || name.equals("oot-mq.otr") || name.equals("oot.otr")) {
+                        continue; // Skip these
+                    }
+
+                    File dest = new File(targetRootFolder, name);
                     try {
-                        targetAssetsDir.mkdirs();
-                        AssetCopyUtil.copyAssetsToExternal(this, "assets", targetAssetsDir.getAbsolutePath());
+                        if (file.isDirectory()) {
+                            AssetCopyUtil.copyDirectory(file, dest);
+                        } else {
+                            AssetCopyUtil.copyFile(file, dest);
+                        }
+                        Log.i("setupFiles", "Migrated: " + name);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e("setupFiles", "Failed to migrate: " + name, e);
                     }
                 }
-
-                // --- Create empty mods folder ---
-                File targetModsDir = new File(targetRootFolder, "mods");
-                targetModsDir.mkdirs();
-
-                Toast.makeText(this, "Assets copied to SOH", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Log.i("setupFiles", "Target folder already exists.");
+
+            runOnUiThread(() -> Toast.makeText(this, "Save data migrated", Toast.LENGTH_SHORT).show());
         }
 
-        // --- Always check if soh.otr exists and copy it if not ---
+        // Ensure root folder exists
+        if (!targetRootFolder.exists()) {
+            if (!targetRootFolder.mkdirs()) {
+                Log.e("setupFiles", "Failed to create root folder");
+                runOnUiThread(() -> Toast.makeText(this, "Failed to create folder", Toast.LENGTH_LONG).show());
+                setupLatch.countDown();
+                return;
+            }
+        }
+
+        // Always ensure mods folder exists
+        File targetModsDir = new File(targetRootFolder, "mods");
+        if (!targetModsDir.exists()) {
+            targetModsDir.mkdirs();
+        }
+
+        // Copy assets/ from internal
+        File targetAssetsDir = new File(targetRootFolder, "assets");
+        try {
+            if (!targetAssetsDir.exists()) {
+                targetAssetsDir.mkdirs();
+            }
+            AssetCopyUtil.copyAssetsToExternal(this, "assets", targetAssetsDir.getAbsolutePath());
+            runOnUiThread(() -> Toast.makeText(this, "Assets copied", Toast.LENGTH_SHORT).show());
+        } catch (IOException e) {
+            e.printStackTrace();
+            runOnUiThread(() -> Toast.makeText(this, "Error copying assets", Toast.LENGTH_LONG).show());
+        }
+
+        // Copy soh.otr from internal assets
         File targetOtrFile = new File(targetRootFolder, "soh.otr");
-        if (!targetOtrFile.exists()) {
-            Log.i("setupFiles", "soh.otr not found. Copying from APK...");
-            try {
-                InputStream in = getAssets().open("soh.otr");
-                OutputStream out = new FileOutputStream(targetOtrFile);
+        try (InputStream in = getAssets().open("soh.otr");
+             OutputStream out = new FileOutputStream(targetOtrFile)) {
 
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-
-                in.close();
-                out.close();
-
-                Toast.makeText(this, "soh.otr copied to SOH", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Error copying soh.otr.", Toast.LENGTH_LONG).show();
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
             }
-        } else {
-            if (isFirstSetup) {
-                Log.i("setupFiles", "soh.otr already copied during first setup.");
-            } else {
-                Log.i("setupFiles", "soh.otr already exists. No action needed.");
-            }
+
+            runOnUiThread(() -> Toast.makeText(this, "soh.otr copied", Toast.LENGTH_SHORT).show());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            runOnUiThread(() -> Toast.makeText(this, "Error copying soh.otr", Toast.LENGTH_LONG).show());
         }
+
+        setupLatch.countDown();
     }
+
+
 
 
     private native void nativeHandleSelectedFile(String filePath);
@@ -256,7 +317,7 @@ public class MainActivity extends SDLActivity{
             // Handle MANAGE_EXTERNAL_STORAGE result
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (Environment.isExternalStorageManager()) {
-                    setupFiles();
+                    checkAndSetupFiles();
                 } else {
                     Toast.makeText(this, "Storage permission is required to access files.", Toast.LENGTH_LONG).show();
                 }
