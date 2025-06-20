@@ -130,10 +130,16 @@ public class MainActivity extends SDLActivity{
 
     // Check if storage permission is granted
     private boolean hasStoragePermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11 and above
+            return Environment.isExternalStorageManager();
+        } else {
+            // Android 10 and below
+            return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED;
+        }
     }
 
     private static final int STORAGE_PERMISSION_REQUEST_CODE = 2296;
@@ -175,7 +181,7 @@ public class MainActivity extends SDLActivity{
         if (!targetRootFolder.exists() || isMissingAssets || isMissingSohOtr) {
             new AlertDialog.Builder(this)
                     .setTitle("Setup Required")
-                    .setMessage("Some required files are missing. The app will create them (~30s). Press OK to begin.")
+                    .setMessage("Some required files are missing. The app will create them (~1 minute). Press OK to begin.")
                     .setCancelable(false)
                     .setPositiveButton("OK", (dialog, which) -> {
                         Executors.newSingleThreadExecutor().execute(() -> {
