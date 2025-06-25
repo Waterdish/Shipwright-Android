@@ -1,0 +1,93 @@
+FROM ubuntu:24.04
+
+###############################################################################
+
+### Tools Configuration ###
+
+# Java JDK Setup
+ARG JDK_VERSION="17"
+
+# Gradle Setup
+ARG GRADLE_VERSION="8.4"
+ARG GRADLE_INSTALL_PATH="/opt/gradle"
+
+# CMake Setup (https://github.com/Kitware/CMake)
+ARG CMAKE_VERSION="3.31.5"
+ARG CMAKE_PKG="cmake-${CMAKE_VERSION}-linux-x86_64.sh"
+ARG CMAKE_REPO_URL="https://github.com/Kitware/CMake/releases/download"
+ARG CMAKE_PKG_URL="${CMAKE_REPO_URL}/v${CMAKE_VERSION}/${CMAKE_PKG}"
+
+# Android Setup
+ARG ANDROID_SDK_VERSION="31"
+ARG ANDROID_NDK_VERSION="26.0.10792818"
+ARG ANDROID_BUILD_TOOLS_VERSION="30.0.2"
+ARG ANDROID_INSTALL_PATH="/opt/android-studio"
+
+###############################################################################
+
+# Set Environment Variable for no user interaction with APT
+ARG DEBIAN_FRONTEND=noninteractive
+
+###############################################################################
+
+# Install system packages
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends apt-utils && \
+    apt-get install --yes --no-install-recommends \
+        openjdk-${JDK_VERSION}-jdk \
+        wget \
+        unzip \
+        curl \
+        git \
+        zip \
+        ninja-build \
+        build-essential \
+        ca-certificates && \
+    apt-get clean --yes && \
+    rm -rf /var/lib/apt/lists/*
+
+# CMake Installation
+RUN wget ${CMAKE_PKG_URL} -O /tmp/cmake.sh && \
+    chmod +x /tmp/cmake.sh && \
+    /tmp/cmake.sh --skip-license --prefix=/usr/local && \
+    rm -f /tmp/cmake.sh
+
+# Gradle Installation
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -O /tmp/gradle.zip && \
+    unzip /tmp/gradle.zip -d /opt && \
+    ln -s /opt/gradle-${GRADLE_VERSION} ${GRADLE_INSTALL_PATH} && \
+    ln -s ${GRADLE_INSTALL_PATH}/bin/gradle /usr/bin/gradle && \
+    rm /tmp/gradle.zip
+ENV PATH="${GRADLE_INSTALL_PATH}/bin:${PATH}"
+
+# Install Android SDK Command Line Tools
+RUN mkdir -p ${ANDROID_INSTALL_PATH}/cmdline-tools && \
+    wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/tools.zip && \
+    unzip /tmp/tools.zip -d ${ANDROID_INSTALL_PATH}/cmdline-tools && \
+    mv ${ANDROID_INSTALL_PATH}/cmdline-tools/cmdline-tools ${ANDROID_INSTALL_PATH}/cmdline-tools/latest && \
+    rm /tmp/tools.zip
+ENV ANDROID_SDK_ROOT=${ANDROID_INSTALL_PATH}
+ENV PATH="${ANDROID_INSTALL_PATH}/cmdline-tools/latest/bin:${PATH}"
+
+# Accept Android SDK-Manager License
+RUN yes | sdkmanager --licenses
+
+# Install Android Tools, SDK and NDK
+RUN sdkmanager --update && \
+    sdkmanager \
+    "platform-tools" \
+    "platforms;android-${ANDROID_SDK_VERSION}" \
+    "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
+    "ndk;${ANDROID_NDK_VERSION}"
+ENV ANDROID_NDK_HOME=${ANDROID_INSTALL_PATH}/ndk/${ANDROID_NDK_VERSION}
+ENV PATH=${ANDROID_INSTALL_PATH}/cmdline-tools/latest/bin:${ANDROID_INSTALL_PATH}/platform-tools:${ANDROID_INSTALL_PATH}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}:$PATH
+
+# Container working directory
+WORKDIR /workspace
+
+# Add and Setup Container Entry Point Script
+COPY ./scripts/entrypoint.sh /opt/entrypoint.sh
+RUN chmod +x /opt/entrypoint.sh
+ENTRYPOINT ["/opt/entrypoint.sh"]
+
+###############################################################################
