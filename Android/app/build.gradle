@@ -22,21 +22,28 @@ android {
         targetSdkVersion 33
         versionCode 8
         versionName "9.0.2"
-        externalNativeBuild {
-            //ndkBuild {
-            //    arguments "APP_PLATFORM=android-23"
-            //    abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-            //}
-            cmake {
-                 arguments "-DSDL_SHARED=ON", "-DANDROID_STL=c++_static", "-DHAVE_LD_VERSION_SCRIPT=OFF",'-DUSE_OPENGLES=ON'
-                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-                 //abiFilters 'arm64-v8a'
-            }
-        }
     }
     buildTypes {
+        debug {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DSDL_SHARED=ON", "-DANDROID_STL=c++_static", "-DHAVE_LD_VERSION_SCRIPT=OFF",'-DUSE_OPENGLES=ON'
+                    abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+                }
+            }
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.debug
+            externalNativeBuild {
+                cmake {
+                    arguments "-DSDL_SHARED=ON", "-DANDROID_STL=c++_static", "-DHAVE_LD_VERSION_SCRIPT=OFF",'-DUSE_OPENGLES=ON'
+                    abiFilters 'arm64-v8a'
+                }
+            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
