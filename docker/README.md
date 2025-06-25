@@ -23,7 +23,9 @@ The **Makefile** offers the next commands:
 ```bash
 make setup - Download and install the container image environment needed for project build.
 
-make build - Run the container to build the project.
+make build - Run the container to build the project for debug/release and multiple architectures.
+
+make build_release - Run the container to build the project for release and common architecture (ARMv8).
 
 make create_container - Build the container image from the Containerfile (no needed if you have install it via make setup).
 ```

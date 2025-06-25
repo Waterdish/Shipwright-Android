@@ -15,17 +15,16 @@ PROJECT_PATH=$(realpath "${DIR}/../../")
 
 ###############################################################################
 
-# Check for required arguments
-if [ -z "$1" ]; then
-    echo "Usage: $0 /path/to/project"
-    exit 1
+# Check if only release build flag was provided
+ONLY_RELEASE_BUILD="false"
+if [[ "$1" == "--release" ]] || [[ "$1" == "-r" ]]; then
+    ONLY_RELEASE_BUILD="true"
 fi
 
-# Check if the project path exists
-if [ ! -d "$PROJECT_PATH" ]; then
-    echo "Error: Project path not found"
-    echo "  $PROJECT_PATH"
-    exit 1
+# Set type of build
+GRADLEW_BUILD_TYPE="build"
+if [[ "$ONLY_RELEASE_BUILD" == "true" ]]; then
+    GRADLEW_BUILD_TYPE="assembleRelease"
 fi
 
 # Header
@@ -36,13 +35,20 @@ echo "-----------------------------------------------------------"
 echo "Building project '${PROJECT_PATH}'..."
 echo ""
 
+# Check if the project path exists
+if [ ! -d "$PROJECT_PATH" ]; then
+    echo "Error: Project path not found"
+    echo ""
+    exit 1
+fi
+
 # Run Container to build
 docker run --network="host" --rm \
     --name $CONTAINER_NAME \
     -v "$PROJECT_PATH":/workspace \
     -w /workspace \
     $IMAGE_NAME \
-    bash -c "cp -a local.properties Android/ && cd Android && ./gradlew build"
+    bash -c "cp -a local.properties Android/ && cd Android && ./gradlew ${GRADLEW_BUILD_TYPE}"
 
 BUILD_RESULT=$?
 

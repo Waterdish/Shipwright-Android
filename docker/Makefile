@@ -15,7 +15,8 @@ help:
 	@ echo ""
 	@ echo "Usage:"
 	@ echo "  make setup - Install container environment"
-	@ echo "  make build - Build the project through the container"
+	@ echo "  make build - Build project through the container"
+	@ echo "  make build_release - Build project release through the container"
 	@ echo "  make create_container - Local build the container"
 	@ echo ""
 
@@ -25,7 +26,11 @@ setup: scripts_exec_permission
 
 # make build
 build: scripts_exec_permission
-	@ $(SCRIPTS)/build_android_project.sh .
+	@ $(SCRIPTS)/build_android_project.sh
+
+# make build_release
+build_release: scripts_exec_permission
+	@ $(SCRIPTS)/build_android_project.sh --release
 
 # make create_container
 create_container: scripts_exec_permission
