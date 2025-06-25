@@ -1,0 +1,64 @@
+
+###############################################################################
+
+name: Project Build
+
+###############################################################################
+
+# Trigger the jobs on:
+# - A pull request is opened or a new commit is added to the pull request
+# - A new release is created or a release is edited
+on:
+  pull_request:
+    types: [opened, synchronize]
+  release:
+    types: [published, edited]
+
+###############################################################################
+
+# Jobs to run
+jobs:
+
+  # Build the project and upload Release APK to Github artifacts
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup and build the project
+        run: |
+          cd docker
+          make setup
+          make build_release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            Android/app/build/outputs/apk/release/*.apk
+
+  # Upload Built APK to Github Release
+  upload-release-artifacts:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: /tmp/artifacts
+
+      - name: Upload release artifacts
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            /tmp/artifacts/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+###############################################################################
