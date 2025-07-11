@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.os.Build;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import android.util.Log;
@@ -44,6 +45,8 @@ public class MainActivity extends SDLActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         preferences = getSharedPreferences("com.dishii.soh.prefs",Context.MODE_PRIVATE);
 
@@ -379,6 +382,7 @@ public class MainActivity extends SDLActivity{
         // Add overlay view to the main layout (you may need to add it to a container like FrameLayout)
         ViewGroup view = (ViewGroup) getContentView();
         view.addView(overlayView);
+        view.setKeepScreenOn(true);
 
         final ViewGroup buttonGroup = overlayView.findViewById(R.id.button_group);
 
