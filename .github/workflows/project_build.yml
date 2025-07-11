@@ -42,23 +42,24 @@ jobs:
             Android/app/build/outputs/apk/release/*.apk
 
   # Upload Built APK to Github Release
-  upload-release-artifacts:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release'
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: /tmp/artifacts
+  #  upload-release-artifacts:
+  #    needs: build
+  #    runs-on: ubuntu-latest
+  #    if: github.event_name == 'release'
+  #    steps:
+  #      - name: Download build artifacts
+  #        uses: actions/download-artifact@v4
+  #        with:
+  #          name: build-artifacts
+  #          path: /tmp/artifacts
+  #
+  #      - name: Upload release artifacts
+  #        uses: softprops/action-gh-release@v1
+  #        with:
+  #          files: |
+  #            /tmp/artifacts/*.apk
+  #        env:
+  #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload release artifacts
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            /tmp/artifacts/*.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 ###############################################################################
