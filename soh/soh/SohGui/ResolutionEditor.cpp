@@ -222,7 +222,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
     // Collapsible panel for additional settings
     UIWidgets::PushStyleHeader(THEME_COLOR);
     if (ImGui::CollapsingHeader("Additional Settings")) {
-#if defined(__SWITCH__) || defined(__WIIU__)
+#if defined(__SWITCH__) || defined(__WIIU__) || defined(__ANDROID__)
         // Disable aspect correction, stretching the framebuffer to fill the viewport.
         // This option is only really needed on systems limited to 16:9 TV resolutions, such as consoles.
         // The associated cvar is still functional on PC platforms if you want to use it though.
